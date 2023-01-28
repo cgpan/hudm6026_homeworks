@@ -1,7 +1,7 @@
 # HUDM6026 Homeworks' solutions  
 This repo is used to track the my progress of hudm6026 homewoks. Welcome to review and give feedbacks. All the information is for reference only, please don't copy and paste directly.
 
-*HUDM6026 Computational Statistics* is an advance-level course in applied statistics field, offered by Prof. Keller on Spring, 2023.
+*HUDM6026 Computational Statistics* is taught by Prof. Keller on Spring, 2023.
 
 ## Homework_01 solutions  
 
