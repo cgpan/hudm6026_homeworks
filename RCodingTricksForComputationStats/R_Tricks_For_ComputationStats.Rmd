@@ -1,0 +1,23 @@
+---
+title: "R Tricks For Computational Stats"
+author: Chenguang Pan
+date: Jan 31, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 4
+    number_sections: false
+    keep_tex: true
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```
