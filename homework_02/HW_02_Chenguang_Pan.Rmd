@@ -1,0 +1,61 @@
+---
+title: "HUDM6026 Homework_01"
+author: Chenguang Pan
+date: Feb 03, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 4
+    number_sections: false
+    keep_tex: true
+    highlight: tango
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```
+
+## Question 01 SCR 3.3  
+**MY SOLUTION:**  
+The inverse transformation of the `Pareto(a,b)`'s cdf function is as followed. $$F^{-1}(u)=\frac{b}{(1-u)^\frac{1}{a}} $$  
+
+```{r}
+# define the quantile function of Pareto(a,b) distribution
+quantile_Pareto <-function(prob, a, b){
+  x <- b * (1-prob)^(-1/a)
+  return(x)
+}
+# define the simulated sample size
+n <- 100
+u <- runif(n)
+# based on the uniformly generated vector to get the random sample
+X <- quantile_Pareto(u, 2, 2)
+range(X)
+```   
+This inverse function runs well. Before comparing the simulated density and the original density, I derivate the CDF to get the pdf function of Pareto(a,b), that is:$$f(x)=\frac{ab^a}{x^{a+1}}$$
+```{r,fig.show='hold',out.width="100%",out.height= "50%"}
+# define the layout of graph's output
+#par(mfrow=c(1,2))
+# draw the density histogram of the simulated data
+hist(X, prob = T, 
+     breaks = 50, 
+     main = expression(f(x)==ab^a/x^(a+1))) 
+# prepare the Pareto(2,2) distribution
+x <- seq(2,40,.38)
+y <- 2*(2^2)/(x^(2+1))
+# superimpose the lines on the simulated density
+lines(x, y, col="red")
+mtext("Figure 1. Comparing the simulated data with Pareto(a,b)",
+      side = 3,
+      line = -1,
+      outer = T)
+```
+
+
