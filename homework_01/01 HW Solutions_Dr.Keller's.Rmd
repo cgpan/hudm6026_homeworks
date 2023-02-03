@@ -1,0 +1,130 @@
+---
+title: "01 HW"
+author: "Bryan Keller"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Problem 1
+
+In problem 1 we are tasked with writing a function to generate data from the chi-squared distribution using a convolution of squared standard normals. There are a number of ways to do this. For example, you could do this in two steps by first writing a function that generates a single chi-squared variate. Then, you could embed that function inside another function which replicates it up to the desired sample size. Furthermore, there are multiple ways to replicate. One way is to use the `replicate()` function. Another option is to write a `for` loop. Here is a function that uses `replicate()` and `rnorm` to generate $n$ random variates from a chi-squared with $p$ df.
+
+```{r}
+chi_sq <- function(n, p) {
+  return(replicate(n = n, 
+                   expr = sum(rnorm(n = p)^2), 
+                   simplify = TRUE))
+}
+```
+
+## Problem 2
+Here we are asked to generate a large sample using the new function from (1) and also using function `rchisq()` and to compare the distributions graphically. They are, indeed, very close.
+
+```{r, fig.show="hold", out.width="50%"}
+set.seed(2672)
+samp1 <- chi_sq(n = 1e4, p = 3)
+samp2 <- rchisq(n = 1e4, df = 3)
+hist(samp1, breaks = seq(0, 31, .25), freq = FALSE)
+hist(samp2, breaks = seq(0, 31, .25), freq = FALSE)
+```
+
+Putting the data into long form in a data frame allows me to use some plotting functions from `ggplot2`. Here are parallel boxplots and simultaneous density curves for the generated data by method.
+
+```{r, fig.show="hold", out.width="50%", warning = FALSE, message = FALSE}
+df1 <- data.frame(Method = rep(c("Mine", "R's"), each = 1e4),
+                  Data = c(samp1, samp2))
+library(tidyverse)
+df1 %>% ggplot(aes(x = Method, y = Data)) + 
+  geom_boxplot()  
+df1 %>% ggplot(aes(x = Data, color = Method)) + 
+  geom_density()
+```
+
+## Problem 3
+For problem 3 we are going to generate means of size 5 from a chi-squared RV with 1 df to try to plot the sampling distribution of the sample mean with $n = 5$. Next, we will do the same with $n = 10, 20, 40$. First, write a function to produce the sample mean and standardize it. Note that I didn't specify that you had to standardize the means in the assignment, but nevertheless I will do so here.
+
+```{r }
+clt_fn <- function(n) {
+  dat <- rchisq(n = n, df = 1)
+  Z <- (mean(dat) - 1)/(sqrt(2)/sqrt(n))
+  return(Z)
+}
+```
+
+Next, replicate the function to generate lots of means of the specified size to then plot their distribution. Also, overlay a normal curve with the same sample mean and sample SD as the set of means for comparison.
+
+```{r, fig.show="hold", out.width="50%"}
+# 10k standardized sample means for n = 5
+set.seed(1412)
+clt_data_5 <- replicate(n = 10000, expr = clt_fn(n = 5), simplify = TRUE)
+hist(clt_data_5, freq = FALSE)
+curve(expr = dnorm(x, mean = mean(clt_data_5), sd = sd(clt_data_5)), 
+      from = -2, to = 7, add = TRUE, n = 1001, col = "salmon", lwd = 3)
+
+# 10k standardized sample means for n = 10
+set.seed(8929)
+clt_data_10 <- replicate(n = 10000, expr = clt_fn(n = 10), simplify = TRUE)
+hist(clt_data_10, freq = FALSE)
+curve(expr = dnorm(x, mean = mean(clt_data_10), sd = sd(clt_data_10)), 
+      from = -2, to = 7, add = TRUE, n = 1001, col = "salmon", lwd = 3)
+
+# 10k standardized sample means for n = 20
+set.seed(5619)
+clt_data_20 <- replicate(n = 10000, expr = clt_fn(n = 20), simplify = TRUE)
+hist(clt_data_20, freq = FALSE)
+curve(expr = dnorm(x, mean = mean(clt_data_20), sd = sd(clt_data_20)), 
+      from = -2, to = 7, add = TRUE, n = 1001, col = "salmon", lwd = 3)
+
+# 10k standardized sample means for n = 40
+set.seed(5103)
+clt_data_40 <- replicate(n = 10000, expr = clt_fn(n = 40), simplify = TRUE)
+hist(clt_data_40, freq = FALSE)
+curve(expr = dnorm(x, mean = mean(clt_data_40), sd = sd(clt_data_40)), 
+      from = -3, to = 7, add = TRUE, n = 1001, col = "salmon", lwd = 3)
+```
+
+The progression of distributional shapes from heavily skewed right to symmetric and is expected and can be explained by the central limit theorem, which states that no matter the distribution of the parent population, the sampling distribution of the sample mean approaches a normal distribution as the sample size increases.
+
+## Problem 4
+Here the goal is to write a function to generate data for a regression situation given the covariance matrix in the problem. Although I didn't specify that the predictors must be generated as multivariate normal, the only way we know how to generate predictors such that they have a given covariance matrix is with multivariate normal, so my guess was that you would use that distribution. Furthermore, I didn't specify the mean vector, so that was your choice as well. I did, however, specify the residual variance of $0.75^2$.
+
+```{r}
+library(mvtnorm)
+dat_gen <- function(n = 200) {
+  # Generate the Xs
+  sig <- matrix(c(13.6, -14.5, -103.4, 
+                  -14.5, 65.2, 154.0,
+                  -103.4, 154.0, 2702.0), 3, 3, byrow = TRUE)
+  X <- rmvnorm(n = n, mean = c(7.37, 53.11, 104.46), sigma = sig)
+  X1 <- X[,1]; X2 <- X[,2]; X3 <- X[,3]
+  Y <- 71.0 - 0.28*X1 + 0.05*X2 - 0.007*X3 + rnorm(n = n, mean = 0, sd = 0.75)
+  out <- data.frame(X1, X2, X3, Y)
+  return(out)
+}
+```
+
+Next, generate data from the model and run multiple linear regression to estimate parameters. Then, report the regression results in a nicely formatted table. 
+
+```{r}
+set.seed(2830)
+dat1 <- dat_gen(n = 1000)
+lm1 <- lm(Y ~ X1 + X2 + X3, data = dat1)
+summary(lm1)
+```
+
+Create a table of regression output with `xtable()` in pakcage **xtable** and `kable()` in package **knitr**.
+```{r}
+library(xtable)
+library(knitr)
+lm1 %>% summary() %>% xtable() %>% kable()
+```
+
+Another option is to use `tab_model` in package **sjPlot**.
+```{r, warning = FALSE}
+library(sjPlot)
+tab_model(lm1)
+```
