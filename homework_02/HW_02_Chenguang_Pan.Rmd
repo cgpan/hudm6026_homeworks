@@ -1,5 +1,5 @@
 ---
-title: "HUDM6026 Homework_01"
+title: "HUDM6026 Homework_02"
 author: Chenguang Pan
 date: Feb 03, 2023
 output:
@@ -40,9 +40,7 @@ X <- quantile_Pareto(u, 2, 2)
 range(X)
 ```   
 This inverse function runs well. Before comparing the simulated density and the original density, I derivate the CDF to get the pdf function of Pareto(a,b), that is:$$f(x)=\frac{ab^a}{x^{a+1}}$$
-```{r,fig.show='hold',out.width="100%",out.height= "50%"}
-# define the layout of graph's output
-#par(mfrow=c(1,2))
+```{r,fig.show='hold',out.width="100%",out.height= "40%"}
 # draw the density histogram of the simulated data
 hist(X, prob = T, 
      breaks = 50, 
@@ -56,6 +54,35 @@ mtext("Figure 1. Comparing the simulated data with Pareto(a,b)",
       side = 3,
       line = -1,
       outer = T)
-```
+```   
 
+## Question 02 SCR 3.9  
+**MY SOLUTION:**  
+This question has already given the clues to generate random variable for the rescaled Epanechnikov kernel
+```{r,fig.show='hold',out.width="100%",out.height= "40%"}
+# write a function based on text's information
+gen_var <- function(n){ # n is the sample size
+  U_1 <- runif(n, -1, 1)
+  U_2 <- runif(n, -1, 1)
+  U_3 <- runif(n, -1, 1)
+  U_output <- c()
+  for (i in c(1:n)) {
+    if (abs(U_3[i]) > abs(U_2[i]) & 
+        abs(U_3[i]) > abs(U_1[i]))
+      {U_output[i] <- U_2[i]} 
+    else 
+      {U_output[i] <- U_3[i]}
+  }
+  return(U_output)
+}
+
+# generate 1000 data
+U_output <- gen_var(1000)
+hist(U_output, prob = T, 
+     breaks = 100, 
+     main = expression(f(x)==(3/4)*(1-x^2)))
+x_vec <- seq(-1,1,0.001)
+f_x <- 0.75*(1-x_vec^2)
+lines(x_vec, f_x, col="red")
+```
 

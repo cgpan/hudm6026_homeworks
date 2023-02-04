@@ -140,9 +140,7 @@ Pareto(a,b), that is:\[f(x)=\frac{ab^a}{x^{a+1}}\]
 
 \begin{Shaded}
 \begin{Highlighting}[]
-\SpecialCharTok{\textgreater{}} \CommentTok{\# define the layout of graph\textquotesingle{}s output}
-\ErrorTok{\textgreater{}} \CommentTok{\#par(mfrow=c(1,2))}
-\ErrorTok{\textgreater{}} \CommentTok{\# draw the density histogram of the simulated data}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# draw the density histogram of the simulated data}
 \ErrorTok{\textgreater{}} \FunctionTok{hist}\NormalTok{(X, }\AttributeTok{prob =}\NormalTok{ T, }
 \SpecialCharTok{+}      \AttributeTok{breaks =} \DecValTok{50}\NormalTok{, }
 \SpecialCharTok{+}      \AttributeTok{main =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{f}\NormalTok{(x)}\SpecialCharTok{==}\NormalTok{ab}\SpecialCharTok{\^{}}\NormalTok{a}\SpecialCharTok{/}\NormalTok{x}\SpecialCharTok{\^{}}\NormalTok{(a}\SpecialCharTok{+}\DecValTok{1}\NormalTok{))) }
@@ -158,6 +156,44 @@ Pareto(a,b), that is:\[f(x)=\frac{ab^a}{x^{a+1}}\]
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=1\linewidth,height=0.5\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-2-1}
+\includegraphics[width=1\linewidth,height=0.4\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-2-1}
+
+\hypertarget{question-02-scr-3.9}{%
+\subsection{Question 02 SCR 3.9}\label{question-02-scr-3.9}}
+
+\textbf{MY SOLUTION:}\\
+This question has already given the clues to generate random variable
+for the rescaled Epanechnikov kernel
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# write a function based on text\textquotesingle{}s information}
+\ErrorTok{\textgreater{}}\NormalTok{ gen\_var }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n)\{ }\CommentTok{\# n is the sample size}
+\SpecialCharTok{+}\NormalTok{   U\_1 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{   U\_2 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{   U\_3 }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n, }\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{   U\_output }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{()}
+\SpecialCharTok{+}   \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\SpecialCharTok{:}\NormalTok{n)) \{}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(U\_3[i]) }\SpecialCharTok{\textgreater{}} \FunctionTok{abs}\NormalTok{(U\_2[i]) }\SpecialCharTok{\&} 
+\SpecialCharTok{+}         \FunctionTok{abs}\NormalTok{(U\_3[i]) }\SpecialCharTok{\textgreater{}} \FunctionTok{abs}\NormalTok{(U\_1[i]))}
+\SpecialCharTok{+}\NormalTok{       \{U\_output[i] }\OtherTok{\textless{}{-}}\NormalTok{ U\_2[i]\} }
+\SpecialCharTok{+}     \ControlFlowTok{else} 
+\SpecialCharTok{+}\NormalTok{       \{U\_output[i] }\OtherTok{\textless{}{-}}\NormalTok{ U\_3[i]\}}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(U\_output)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# generate 1000 data}
+\ErrorTok{\textgreater{}}\NormalTok{ U\_output }\OtherTok{\textless{}{-}} \FunctionTok{gen\_var}\NormalTok{(}\DecValTok{1000}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{hist}\NormalTok{(U\_output, }\AttributeTok{prob =}\NormalTok{ T, }
+\SpecialCharTok{+}      \AttributeTok{breaks =} \DecValTok{100}\NormalTok{, }
+\SpecialCharTok{+}      \AttributeTok{main =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{f}\NormalTok{(x)}\SpecialCharTok{==}\NormalTok{(}\DecValTok{3}\SpecialCharTok{/}\DecValTok{4}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)))}
+\SpecialCharTok{\textgreater{}}\NormalTok{ x\_vec }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.001}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ f\_x }\OtherTok{\textless{}{-}} \FloatTok{0.75}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x\_vec}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{lines}\NormalTok{(x\_vec, f\_x, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=1\linewidth,height=0.4\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-3-1}
 
 \end{document}
