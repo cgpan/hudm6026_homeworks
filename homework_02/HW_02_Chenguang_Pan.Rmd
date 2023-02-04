@@ -80,9 +80,48 @@ gen_var <- function(n){ # n is the sample size
 U_output <- gen_var(1000)
 hist(U_output, prob = T, 
      breaks = 100, 
+     xlab = "x",
      main = expression(f(x)==(3/4)*(1-x^2)))
 x_vec <- seq(-1,1,0.001)
 f_x <- 0.75*(1-x_vec^2)
 lines(x_vec, f_x, col="red")
+mtext("Figure 2. Rescaled Epanechnikov kernel Distribution",
+      side = 3,
+      line = -1,
+      outer = T)
 ```
+
+## Question 03 SCR 3.11  
+**MY SOLUTION:**   
+How to better understand the mixing weights (i.e., the mixing probabilities)?  The mixing weights is about **how much** each individual distribution contributes to the mixture distribution([Stephanie Glen.  StatisticsHowTo.com](https://www.statisticshowto.com/mixture-distribution/)). Therefore, when constructing the mixture function, one should not directly use the probability of each parent distribution as a coefficient!!
+
+```{r}
+set.seed(1000)
+n <- 1000
+# generate two vectors from normal distribution
+x1 <- rnorm(n,0,1)
+x2 <- rnorm(n,3,1)
+
+# use a for-loop to draw graphs at different mixing weights
+par(mfrow=c(3,2))
+for (p1 in c(0.75, 0.90, 0.60, 0.5, 0.30, 0.15)){
+  # define the mixing prob
+  p2 <- 1 - p1
+  # use n data from uniform distribution to construct
+  # the proportion of each parent distribution.
+  u <- runif(n)
+  k <- as.integer(u > p2)
+  x <- k * x1 + (1-k) * x2
+  hist(x, prob = T, 
+       breaks = 50, 
+       xlab = "mixture x",
+       main = sprintf("p1=%s, p2=%s", p1, p2))
+  lines(density(x), col= "red")
+}
+mtext("Figure 3. Mixture Distributions With Different Mixing Weights",
+      side = 3,
+      line = -1,
+      outer = T)
+```  
+From the graphs, one can find that when the mixing weights are .5 and .5, the mixture distribution is apparently a bimodal distribution. At this circumstance the two samples contribute equally to the final mixture. But this bimodal distribution might not be symmetrical because the two parent distribution's shapes are different in variance. With increasing in P1, the bimodal distribution will be more positively skewed.
 

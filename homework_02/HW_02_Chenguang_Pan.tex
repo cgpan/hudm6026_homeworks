@@ -98,12 +98,12 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
-  pdftitle={HUDM6026 Homework\_01},
+  pdftitle={HUDM6026 Homework\_02},
   pdfauthor={Chenguang Pan},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{HUDM6026 Homework\_01}
+\title{HUDM6026 Homework\_02}
 \author{Chenguang Pan}
 \date{Feb 03, 2023}
 
@@ -187,13 +187,70 @@ for the rescaled Epanechnikov kernel
 \ErrorTok{\textgreater{}}\NormalTok{ U\_output }\OtherTok{\textless{}{-}} \FunctionTok{gen\_var}\NormalTok{(}\DecValTok{1000}\NormalTok{)}
 \SpecialCharTok{\textgreater{}} \FunctionTok{hist}\NormalTok{(U\_output, }\AttributeTok{prob =}\NormalTok{ T, }
 \SpecialCharTok{+}      \AttributeTok{breaks =} \DecValTok{100}\NormalTok{, }
+\SpecialCharTok{+}      \AttributeTok{xlab =} \StringTok{"x"}\NormalTok{,}
 \SpecialCharTok{+}      \AttributeTok{main =} \FunctionTok{expression}\NormalTok{(}\FunctionTok{f}\NormalTok{(x)}\SpecialCharTok{==}\NormalTok{(}\DecValTok{3}\SpecialCharTok{/}\DecValTok{4}\NormalTok{)}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)))}
 \SpecialCharTok{\textgreater{}}\NormalTok{ x\_vec }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\FloatTok{0.001}\NormalTok{)}
 \SpecialCharTok{\textgreater{}}\NormalTok{ f\_x }\OtherTok{\textless{}{-}} \FloatTok{0.75}\SpecialCharTok{*}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{x\_vec}\SpecialCharTok{\^{}}\DecValTok{2}\NormalTok{)}
 \SpecialCharTok{\textgreater{}} \FunctionTok{lines}\NormalTok{(x\_vec, f\_x, }\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{mtext}\NormalTok{(}\StringTok{"Figure 2. Rescaled Epanechnikov kernel Distribution"}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{side =} \DecValTok{3}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{line =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{outer =}\NormalTok{ T)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics[width=1\linewidth,height=0.4\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-3-1}
+
+\hypertarget{question-03-scr-3.11}{%
+\subsection{Question 03 SCR 3.11}\label{question-03-scr-3.11}}
+
+\textbf{MY SOLUTION:}\\
+How to better understand the mixing weights (i.e., the mixing
+probabilities)? The mixing weights is about \textbf{how much} each
+individual distribution contributes to the mixture
+distribution(\href{https://www.statisticshowto.com/mixture-distribution/}{Stephanie
+Glen. StatisticsHowTo.com}). Therefore, when constructing the mixture
+function, one should not directly use the probability of each parent
+distribution as a coefficient!!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{set.seed}\NormalTok{(}\DecValTok{1000}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ n }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# generate two vectors from normal distribution}
+\ErrorTok{\textgreater{}}\NormalTok{ x1 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ x2 }\OtherTok{\textless{}{-}} \FunctionTok{rnorm}\NormalTok{(n,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# use a for{-}loop to draw graphs at different mixing weights}
+\ErrorTok{\textgreater{}} \FunctionTok{par}\NormalTok{(}\AttributeTok{mfrow=}\FunctionTok{c}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\SpecialCharTok{\textgreater{}} \ControlFlowTok{for}\NormalTok{ (p1 }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\FloatTok{0.75}\NormalTok{, }\FloatTok{0.90}\NormalTok{, }\FloatTok{0.60}\NormalTok{, }\FloatTok{0.5}\NormalTok{, }\FloatTok{0.30}\NormalTok{, }\FloatTok{0.15}\NormalTok{))\{}
+\SpecialCharTok{+}   \CommentTok{\# define the mixing prob}
+\SpecialCharTok{+}\NormalTok{   p2 }\OtherTok{\textless{}{-}} \DecValTok{1} \SpecialCharTok{{-}}\NormalTok{ p1}
+\SpecialCharTok{+}   \CommentTok{\# use n data from uniform distribution to construct}
+\SpecialCharTok{+}   \CommentTok{\# the proportion of each parent distribution.}
+\SpecialCharTok{+}\NormalTok{   u }\OtherTok{\textless{}{-}} \FunctionTok{runif}\NormalTok{(n)}
+\SpecialCharTok{+}\NormalTok{   k }\OtherTok{\textless{}{-}} \FunctionTok{as.integer}\NormalTok{(u }\SpecialCharTok{\textgreater{}}\NormalTok{ p2)}
+\SpecialCharTok{+}\NormalTok{   x }\OtherTok{\textless{}{-}}\NormalTok{ k }\SpecialCharTok{*}\NormalTok{ x1 }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{k) }\SpecialCharTok{*}\NormalTok{ x2}
+\SpecialCharTok{+}   \FunctionTok{hist}\NormalTok{(x, }\AttributeTok{prob =}\NormalTok{ T, }
+\SpecialCharTok{+}        \AttributeTok{breaks =} \DecValTok{50}\NormalTok{, }
+\SpecialCharTok{+}        \AttributeTok{xlab =} \StringTok{"mixture x"}\NormalTok{,}
+\SpecialCharTok{+}        \AttributeTok{main =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"p1=\%s, p2=\%s"}\NormalTok{, p1, p2))}
+\SpecialCharTok{+}   \FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(x), }\AttributeTok{col=} \StringTok{"red"}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} \FunctionTok{mtext}\NormalTok{(}\StringTok{"Figure 3. Mixture Distributions With Different Mixing Weights"}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{side =} \DecValTok{3}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{line =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{outer =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-4-1.pdf}
+From the graphs, one can find that when the mixing weights are .5 and
+.5, the mixture distribution is apparently a bimodal distribution. At
+this circumstance the two samples contribute equally to the final
+mixture. But this bimodal distribution might not be symmetrical because
+the two parent distribution's shapes are different in variance. With
+increasing in P1, the bimodal distribution will be more positively
+skewed.
 
 \end{document}
