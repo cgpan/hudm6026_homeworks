@@ -253,4 +253,62 @@ the two parent distribution's shapes are different in variance. With
 increasing in P1, the bimodal distribution will be more positively
 skewed.
 
+\hypertarget{question-04-scr-3.14}{%
+\subsection{Question 04 SCR 3.14}\label{question-04-scr-3.14}}
+
+\textbf{MY SOLUTION:}\\
+For solving this question, I refer to Prof.Keller's in-class demo codes
+and remove unnecessary if-else expressions.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# create a function to gen data matrix from a multivariate normal distribution.}
+\ErrorTok{\textgreater{}}\NormalTok{ mvn\_gen }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n, mu, sigma)\{}
+\SpecialCharTok{+}   \CommentTok{\# to determine the dimension}
+\SpecialCharTok{+}\NormalTok{   d }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(mu)}
+\SpecialCharTok{+}   \CommentTok{\# generate a n*d matrix from a standard normal distribution}
+\SpecialCharTok{+}\NormalTok{   Z }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{rnorm}\NormalTok{(n}\SpecialCharTok{*}\NormalTok{d), }\AttributeTok{nrow =}\NormalTok{ n, }\AttributeTok{ncol =}\NormalTok{ d)}
+\SpecialCharTok{+}   \CommentTok{\# use Cholesky function to factorize the Cov{-}var matrix}
+\SpecialCharTok{+}\NormalTok{   Q }\OtherTok{\textless{}{-}} \FunctionTok{chol}\NormalTok{(sigma)}
+\SpecialCharTok{+}   \CommentTok{\# to transform the mu from dataframe to matrix}
+\SpecialCharTok{+}\NormalTok{   mu }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{ (mu, }\AttributeTok{nrow =}\NormalTok{ d, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}   \CommentTok{\# J is column vector of ones}
+\SpecialCharTok{+}\NormalTok{   J }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(mu, }\AttributeTok{nrow =}\NormalTok{ n, }\AttributeTok{ncol =} \DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}   \CommentTok{\# define the output X matrix}
+\SpecialCharTok{+}\NormalTok{   X }\OtherTok{\textless{}{-}}\NormalTok{ Z }\SpecialCharTok{\%*\%}\NormalTok{ Q }\SpecialCharTok{+}\NormalTok{ J }\SpecialCharTok{\%*\%} \FunctionTok{t}\NormalTok{(mu)}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(}\FunctionTok{data.frame}\NormalTok{(X))}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# input the given cov{-}var matrix}
+\ErrorTok{\textgreater{}}\NormalTok{ sig }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\FloatTok{1.0}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\FloatTok{0.5}\NormalTok{,}
+\SpecialCharTok{+}                 \SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\FloatTok{1.0}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{,}
+\SpecialCharTok{+}                 \FloatTok{0.5}\NormalTok{, }\SpecialCharTok{{-}}\FloatTok{0.5}\NormalTok{, }\FloatTok{1.0}\NormalTok{),}\DecValTok{3}\NormalTok{,}\DecValTok{3}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{set.seed}\NormalTok{(}\DecValTok{100}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ X }\OtherTok{\textless{}{-}} \FunctionTok{mvn\_gen}\NormalTok{(}\AttributeTok{n=}\DecValTok{200}\NormalTok{, }\AttributeTok{mu =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{), }\AttributeTok{sigma =}\NormalTok{ sig)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{pairs}\NormalTok{(X)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{mtext}\NormalTok{(}\StringTok{"Figure 4. Generate Data From Multivariate Normal Distribution"}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{side =} \DecValTok{3}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{line =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}
+\SpecialCharTok{+}       \AttributeTok{outer =}\NormalTok{ T)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{head}\NormalTok{(X)}
+\NormalTok{           X1          X2         X3}
+\DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.50219235} \FloatTok{0.275493640} \SpecialCharTok{{-}}\FloatTok{1.3082869}
+\DecValTok{2}  \FloatTok{0.13153117} \FloatTok{0.625320206}  \FloatTok{2.0529727}
+\DecValTok{3} \SpecialCharTok{{-}}\FloatTok{0.07891709} \FloatTok{2.777854646}  \FloatTok{4.8891723}
+\DecValTok{4}  \FloatTok{0.88678481} \FloatTok{0.001194942} \SpecialCharTok{{-}}\FloatTok{0.5540068}
+\DecValTok{5}  \FloatTok{0.11697127} \FloatTok{1.823304027}  \FloatTok{0.9285956}
+\DecValTok{6}  \FloatTok{0.31863009} \FloatTok{0.956058119}  \FloatTok{5.3480697}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=1\linewidth,height=0.5\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-5-1}
+
+From the cov-var matrix, one can easily get the correlation coefficient
+between the \(x_1\) and \(x_2\) is -0.5. The middle-right graph
+demonstrated that these two variables are negatively correlated. By
+visually check, the joint mean point is at around\texttt{(0,1)}, which
+agrees with the given condition. The bottom-right graph also meets the
+given condition. However, the correlation between the \(x_2\) and
+\(x_3\) is obscure by visual check.
+
 \end{document}

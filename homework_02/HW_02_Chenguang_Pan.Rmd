@@ -123,5 +123,64 @@ mtext("Figure 3. Mixture Distributions With Different Mixing Weights",
       line = -1,
       outer = T)
 ```  
-From the graphs, one can find that when the mixing weights are .5 and .5, the mixture distribution is apparently a bimodal distribution. At this circumstance the two samples contribute equally to the final mixture. But this bimodal distribution might not be symmetrical because the two parent distribution's shapes are different in variance. With increasing in P1, the bimodal distribution will be more positively skewed.
+From the graphs, one can find that when the mixing weights are .5 and .5, the mixture distribution is apparently a bimodal distribution. At this circumstance the two samples contribute equally to the final mixture. But this bimodal distribution might not be symmetrical because the two parent distribution's shapes are different in variance. With increasing in P1, the bimodal distribution will be more positively skewed.  
+
+
+## Question 04 SCR 3.14  
+**MY SOLUTION:**   
+For solving this question, I refer to Prof.Keller's in-class demo codes and remove unnecessary if-else expressions.
+```{r,fig.show='hold',out.width="100%",out.height= "50%"}
+# create a function to gen data matrix from a multivariate normal distribution.
+mvn_gen <- function(n, mu, sigma){
+  # to determine the dimension
+  d <- length(mu)
+  # generate a n*d matrix from a standard normal distribution
+  Z <- matrix(rnorm(n*d), nrow = n, ncol = d)
+  # use Cholesky function to factorize the Cov-var matrix
+  Q <- chol(sigma)
+  # to transform the mu from dataframe to matrix
+  mu <- matrix (mu, nrow = d, ncol = 1)
+  # J is column vector of ones
+  J <- matrix(mu, nrow = n, ncol = 1)
+  # define the output X matrix
+  X <- Z %*% Q + J %*% t(mu)
+  return(data.frame(X))
+}
+
+# input the given cov-var matrix
+sig <- matrix(c(1.0, -0.5, 0.5,
+                -0.5, 1.0, -0.5,
+                0.5, -0.5, 1.0),3,3)
+set.seed(100)
+X <- mvn_gen(n=200, mu = c(0,1,2), sigma = sig)
+pairs(X)
+mtext("Figure 4. Generate Data From Multivariate Normal Distribution",
+      side = 3,
+      line = -1,
+      outer = T)
+head(X)
+```  
+
+From the cov-var matrix, one can easily get the correlation coefficient between the $x_1$ and $x_2$ is -0.5. The middle-right graph demonstrated that these two variables are negatively correlated. By visually check, the joint mean point is at around`(0,1)`, which agrees with the given condition. The bottom-right graph also meets the given condition. However, the correlation between the $x_2$ and $x_3$ is obscure by visual check.
+
+```{r, include=FALSE}
+library(ggplot2)
+par(mfrow=c(3,2))
+ggplot(X, aes(x=X1, y=X2))+
+  geom_point(alpha = .2) +
+  geom_density_2d()+
+  theme_bw()
+ggplot(X, aes(x=X1, y=X3))+
+  geom_point(alpha = .2) +
+  geom_density_2d()+
+  theme_bw()
+ggplot(X, aes(x=X2, y=X3))+
+  geom_point(alpha = .2) +
+  geom_density_2d()+
+  theme_bw()
+```
+
+
+
+
 
