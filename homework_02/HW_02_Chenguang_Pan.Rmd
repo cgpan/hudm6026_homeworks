@@ -158,7 +158,6 @@ mtext("Figure 4. Generate Data From Multivariate Normal Distribution",
       side = 3,
       line = -1,
       outer = T)
-head(X)
 ```  
 
 From the cov-var matrix, one can easily get the correlation coefficient between the $x_1$ and $x_2$ is -0.5. The middle-right graph demonstrated that these two variables are negatively correlated. By visually check, the joint mean point is at around`(0,1)`, which agrees with the given condition. The bottom-right graph also meets the given condition. However, the correlation between the $x_2$ and $x_3$ is obscure by visual check.
@@ -180,6 +179,17 @@ ggplot(X, aes(x=X2, y=X3))+
   theme_bw()
 ```
 
+## Question 05 [Bonous]  
+*First show that the sample mean estimator is unbiased for the true population mean. Next, show that the mle estimator for the variance...*
+
+**MY SOLUTION for Part 1:**    
+
+Before proving the first statement, I want to refresh the understanding of several stats concepts. By definition, an **estimator** is a rule that is used to estimate an unknown parameter based on sample. The concept **Unbiased** means that the expectation of an estimator equals to the population parameter, i.e., $E(estimator) = Population Paramter$.
+
+The sample mean estimator is $$\overline{X} = \frac{1}{n}\sum_{i = 1}^{n} x_{i}$$, where $\overline{X}$ is the mean of a sample with n size. therefore, $$E(estimator) = E(\overline{X})=E(\frac{1}{n}\sum_{i = 1}^{n} x_{i})= \frac{1}{n}\sum_{i = 1}^{n}E(x_i)$$. Since $x_i$ is draw from the population with mean $\mu$, one can have $E(x_i) = \mu$. Put this equation to the above, I get $$E(estimator) = E(\overline{X}) = \frac{1}{n}\sum_{i = 1}^{n}\mu=\frac{1}{n}n\mu=\mu$$. In short, here I have $$E(\overline{X})= \mu$$, which proved the sample mean estimator is unbiased for the true population mean.   
+  
+  
+**MY SOLUTION for Part 2:**      
 
 
 

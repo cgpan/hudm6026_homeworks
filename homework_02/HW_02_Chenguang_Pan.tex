@@ -290,14 +290,6 @@ and remove unnecessary if-else expressions.
 \SpecialCharTok{+}       \AttributeTok{side =} \DecValTok{3}\NormalTok{,}
 \SpecialCharTok{+}       \AttributeTok{line =} \SpecialCharTok{{-}}\DecValTok{1}\NormalTok{,}
 \SpecialCharTok{+}       \AttributeTok{outer =}\NormalTok{ T)}
-\SpecialCharTok{\textgreater{}} \FunctionTok{head}\NormalTok{(X)}
-\NormalTok{           X1          X2         X3}
-\DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.50219235} \FloatTok{0.275493640} \SpecialCharTok{{-}}\FloatTok{1.3082869}
-\DecValTok{2}  \FloatTok{0.13153117} \FloatTok{0.625320206}  \FloatTok{2.0529727}
-\DecValTok{3} \SpecialCharTok{{-}}\FloatTok{0.07891709} \FloatTok{2.777854646}  \FloatTok{4.8891723}
-\DecValTok{4}  \FloatTok{0.88678481} \FloatTok{0.001194942} \SpecialCharTok{{-}}\FloatTok{0.5540068}
-\DecValTok{5}  \FloatTok{0.11697127} \FloatTok{1.823304027}  \FloatTok{0.9285956}
-\DecValTok{6}  \FloatTok{0.31863009} \FloatTok{0.956058119}  \FloatTok{5.3480697}
 \end{Highlighting}
 \end{Shaded}
 
@@ -310,5 +302,33 @@ visually check, the joint mean point is at around\texttt{(0,1)}, which
 agrees with the given condition. The bottom-right graph also meets the
 given condition. However, the correlation between the \(x_2\) and
 \(x_3\) is obscure by visual check.
+
+\hypertarget{question-05-bonous}{%
+\subsection{Question 05 {[}Bonous{]}}\label{question-05-bonous}}
+
+\emph{First show that the sample mean estimator is unbiased for the true
+population mean. Next, show that the mle estimator for the
+variance\ldots{}}
+
+\textbf{MY SOLUTION for Part 1:}
+
+Before proving the first statement, I want to refresh the understanding
+of several stats concepts. By definition, an \textbf{estimator} is a
+rule that is used to estimate an unknown parameter based on sample. The
+concept \textbf{Unbiased} means that the expectation of an estimator
+equals to the population parameter, i.e.,
+\(E(estimator) = Population Paramter\).
+
+The sample mean estimator is
+\[\overline{X} = \frac{1}{n}\sum_{i = 1}^{n} x_{i}\], where
+\(\overline{X}\) is the mean of a sample with n size. therefore,
+\[E(estimator) = E(\overline{X})=E(\frac{1}{n}\sum_{i = 1}^{n} x_{i})= \frac{1}{n}\sum_{i = 1}^{n}E(x_i)\].
+Since \(x_i\) is draw from the population with mean \(\mu\), one can
+have \(E(x_i) = \mu\). Put this equation to the above, I get
+\[E(estimator) = E(\overline{X}) = \frac{1}{n}\sum_{i = 1}^{n}\mu=\frac{1}{n}n\mu=\mu\].
+In short, here I have \[E(\overline{X})= \mu\], which proved the sample
+mean estimator is unbiased for the true population mean.
+
+\textbf{MY SOLUTION for Part 2:}
 
 \end{document}
