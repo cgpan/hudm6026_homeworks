@@ -321,7 +321,7 @@ equals to the population parameter, i.e.,
 
 The sample mean estimator is
 \[\overline{x} = \frac{1}{n}\sum_{i = 1}^{n} x_{i}\], where
-\(\overline{X}\) is the mean of a sample with n size. therefore,
+\(\overline{x}\) is the mean of a sample with n size. therefore,
 \[E(estimator) = E(\overline{x})=E(\frac{1}{n}\sum_{i = 1}^{n} x_{i})= \frac{1}{n}\sum_{i = 1}^{n}E(x_i)\].
 Since \(x_i\) is draw from the population with mean \(\mu\), one can
 have \(E(x_i) = \mu\). Put this equation to the above, I get
@@ -355,12 +355,12 @@ the rule of variance, one can have
 \[\sigma_{\overline{x}}^2 = var(\overline{x})=var(\frac{1}{n}\sum_{i = 1}^{n}x_i)=\frac{1}{n^2}var(\sum_{i = 1}^{n}x_i)\].
 Because the samples are independently and identically drawn from the
 population, the covariance among them should be zero, we can have
-\[\sigma_{\overline{x}}^2 =\frac{1}{n^2}\sum_{i = 1}^{n}var(x)=\frac{1}{n}var(x)=\frac{1}{n}{\sigma}^2\].
-From the equations above, one can find the \emph{mle} estimator of
-variance does not follow the rule
-\(E(estimator) = Population Paramter\). The difference between this
-estimator and the true population variance is \(\frac{1}{n}{\sigma}^2\),
-which represents the bias.
+\[\sigma_{\overline{x}}^2 =\frac{1}{n^2}\sum_{i = 1}^{n}var(x)=\frac{1}{n}var(x)=\frac{1}{n}{\sigma}^2\].From
+the equations above, one can find the \emph{mle} estimator of variance
+does not follow the rule \(E(estimator) = Population Paramter\), which
+means this estimator is biased. The difference between this estimator
+and the true population variance is \(\frac{1}{n}{\sigma}^2\), which
+represents the bias.
 \[E(s^2)-{\sigma}^2 = -\sigma_{\overline{x}}^2=-\frac{1}{n}{\sigma}^2\]
 
 \hypertarget{reference-for-this-homework}{%
