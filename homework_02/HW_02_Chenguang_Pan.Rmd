@@ -1,7 +1,7 @@
 ---
 title: "HUDM6026 Homework_02"
 author: Chenguang Pan
-date: Feb 03, 2023
+date: Feb 05, 2023
 output:
   pdf_document:
     toc: false
@@ -126,13 +126,13 @@ mtext("Figure 3. Mixture Distributions With Different Mixing Weights",
       line = -1,
       outer = T)
 ```  
-From the graphs, one can find that when the mixing weights are .5 and .5, the mixture distribution is apparently a bimodal distribution. At this circumstance the two samples contribute equally to the final mixture. But this bimodal distribution might not be symmetrical because the two parent distribution's shapes are different in variance. With increasing in P1, the bimodal distribution will be more positively skewed.  
+From the graphs, one might find that the bimodal distribution occurs when p1 is at the range from 0.2 to 0.8 after controlling the parent density functions.
 
 
 ## Question 04 SCR 3.14  
 **MY SOLUTION:**   
 For solving this question, I refer to Prof.Keller's in-class demo codes and remove unnecessary if-else expressions.
-```{r,fig.show='hold',out.width="100%",out.height= "50%"}
+```{r,fig.show='hold',out.width="100%",out.height= "45%"}
 # create a function to gen data matrix from a multivariate normal distribution.
 mvn_gen <- function(n, mu, sigma){
   # to determine the dimension
@@ -210,4 +210,4 @@ Liang, D. (2012). *Maximum likelihood estimator for variance is biased: Proof.* 
 
 Rizzo, M. L. (2019). *Statistical computing with R.* Chapman and Hall/CRC.
 
-
+user25658, (2013). *Generating random variables from a mixture of Normal distributions.* https://stats.stackexchange.com/q/70861

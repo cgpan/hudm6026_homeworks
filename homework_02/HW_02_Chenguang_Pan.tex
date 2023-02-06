@@ -105,7 +105,7 @@
 
 \title{HUDM6026 Homework\_02}
 \author{Chenguang Pan}
-\date{Feb 03, 2023}
+\date{Feb 05, 2023}
 
 \begin{document}
 \maketitle
@@ -235,7 +235,7 @@ coefficient!!
 \SpecialCharTok{+}        \AttributeTok{breaks =} \DecValTok{50}\NormalTok{, }
 \SpecialCharTok{+}        \AttributeTok{xlab =} \StringTok{"mixture x"}\NormalTok{,}
 \SpecialCharTok{+}        \AttributeTok{main =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"p1=\%s, p2=\%s"}\NormalTok{, p1, p2))}
-\SpecialCharTok{+}   \CommentTok{\# using weighted sum of dnorm() to construct true density function}
+\SpecialCharTok{+}   \CommentTok{\# using weighted sum of dnorm() to construct true density lines}
 \SpecialCharTok{+}\NormalTok{   x\_true }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{10}\NormalTok{,}\DecValTok{10}\NormalTok{,}\FloatTok{0.1}\NormalTok{)}
 \SpecialCharTok{+}\NormalTok{   y\_true }\OtherTok{\textless{}{-}}\NormalTok{ p1}\SpecialCharTok{*}\FunctionTok{dnorm}\NormalTok{(x\_true,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{p1)}\SpecialCharTok{*}\FunctionTok{dnorm}\NormalTok{(x\_true,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{)}
 \SpecialCharTok{+}   \FunctionTok{lines}\NormalTok{(x\_true,y\_true,}\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
@@ -248,13 +248,9 @@ coefficient!!
 \end{Shaded}
 
 \includegraphics{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-4-1.pdf}
-From the graphs, one can find that when the mixing weights are .5 and
-.5, the mixture distribution is apparently a bimodal distribution. At
-this circumstance the two samples contribute equally to the final
-mixture. But this bimodal distribution might not be symmetrical because
-the two parent distribution's shapes are different in variance. With
-increasing in P1, the bimodal distribution will be more positively
-skewed.
+From the graphs, one might find that the bimodal distribution occurs
+when p1 is at the range from 0.2 to 0.8 after controlling the parent
+density functions.
 
 \hypertarget{question-04-scr-3.14}{%
 \subsection{Question 04 SCR 3.14}\label{question-04-scr-3.14}}
@@ -296,7 +292,7 @@ and remove unnecessary if-else expressions.
 \end{Highlighting}
 \end{Shaded}
 
-\includegraphics[width=1\linewidth,height=0.5\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-5-1}
+\includegraphics[width=1\linewidth,height=0.45\textheight]{HW_02_Chenguang_Pan_files/figure-latex/unnamed-chunk-5-1}
 
 From the cov-var matrix, one can easily get the correlation coefficient
 between the \(x_1\) and \(x_2\) is -0.5. The middle-right graph
@@ -381,5 +377,8 @@ biased: Proof.} \url{https://dawenl.github.io/files/mle_biased.pdf}
 
 Rizzo, M. L. (2019). \emph{Statistical computing with R.} Chapman and
 Hall/CRC.
+
+user25658, (2013). \emph{Generating random variables from a mixture of
+Normal distributions.} \url{https://stats.stackexchange.com/q/70861}
 
 \end{document}
