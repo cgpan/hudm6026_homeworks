@@ -93,7 +93,7 @@ mtext("Figure 2. Rescaled Epanechnikov kernel Distribution",
 
 ## Question 03 SCR 3.11  
 **MY SOLUTION:**   
-How to better understand the mixing weights (i.e., the mixing probabilities)?  The mixing weights is about **how much** each individual distribution contributes to the mixture distribution([Stephanie Glen.  StatisticsHowTo.com](https://www.statisticshowto.com/mixture-distribution/)). Therefore, when constructing the mixture function, one should not directly use the probability of each parent distribution as a coefficient!!
+How to better understand the mixing weights (i.e., the mixing probabilities)?  The mixing weights is about **how much** each individual distribution contributes to the mixture distribution([Stephanie Glen.n.d.](https://www.statisticshowto.com/mixture-distribution/)). Therefore, when constructing the mixture function, one should not directly use the probability of each parent distribution as a coefficient!!
 
 ```{r}
 set.seed(1000)
@@ -116,7 +116,10 @@ for (p1 in c(0.75, 0.90, 0.60, 0.5, 0.30, 0.15)){
        breaks = 50, 
        xlab = "mixture x",
        main = sprintf("p1=%s, p2=%s", p1, p2))
-  lines(density(x), col= "red")
+  # using weighted sum of dnorm() to construct true density lines
+  x_true <- seq(-10,10,0.1)
+  y_true <- p1*dnorm(x_true,0,1) + (1-p1)*dnorm(x_true,3,1)
+  lines(x_true,y_true,col="red")
 }
 mtext("Figure 3. Mixture Distributions With Different Mixing Weights",
       side = 3,

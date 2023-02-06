@@ -209,9 +209,9 @@ How to better understand the mixing weights (i.e., the mixing
 probabilities)? The mixing weights is about \textbf{how much} each
 individual distribution contributes to the mixture
 distribution(\href{https://www.statisticshowto.com/mixture-distribution/}{Stephanie
-Glen. StatisticsHowTo.com}). Therefore, when constructing the mixture
-function, one should not directly use the probability of each parent
-distribution as a coefficient!!
+Glen.n.d.}). Therefore, when constructing the mixture function, one
+should not directly use the probability of each parent distribution as a
+coefficient!!
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -235,7 +235,10 @@ distribution as a coefficient!!
 \SpecialCharTok{+}        \AttributeTok{breaks =} \DecValTok{50}\NormalTok{, }
 \SpecialCharTok{+}        \AttributeTok{xlab =} \StringTok{"mixture x"}\NormalTok{,}
 \SpecialCharTok{+}        \AttributeTok{main =} \FunctionTok{sprintf}\NormalTok{(}\StringTok{"p1=\%s, p2=\%s"}\NormalTok{, p1, p2))}
-\SpecialCharTok{+}   \FunctionTok{lines}\NormalTok{(}\FunctionTok{density}\NormalTok{(x), }\AttributeTok{col=} \StringTok{"red"}\NormalTok{)}
+\SpecialCharTok{+}   \CommentTok{\# using weighted sum of dnorm() to construct true density function}
+\SpecialCharTok{+}\NormalTok{   x\_true }\OtherTok{\textless{}{-}} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{10}\NormalTok{,}\DecValTok{10}\NormalTok{,}\FloatTok{0.1}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{   y\_true }\OtherTok{\textless{}{-}}\NormalTok{ p1}\SpecialCharTok{*}\FunctionTok{dnorm}\NormalTok{(x\_true,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{) }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{p1)}\SpecialCharTok{*}\FunctionTok{dnorm}\NormalTok{(x\_true,}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{)}
+\SpecialCharTok{+}   \FunctionTok{lines}\NormalTok{(x\_true,y\_true,}\AttributeTok{col=}\StringTok{"red"}\NormalTok{)}
 \SpecialCharTok{+}\NormalTok{ \}}
 \SpecialCharTok{\textgreater{}} \FunctionTok{mtext}\NormalTok{(}\StringTok{"Figure 3. Mixture Distributions With Different Mixing Weights"}\NormalTok{,}
 \SpecialCharTok{+}       \AttributeTok{side =} \DecValTok{3}\NormalTok{,}
