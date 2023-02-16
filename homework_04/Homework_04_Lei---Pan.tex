@@ -1,0 +1,191 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={HUDM6026 Homework\_04},
+  pdfauthor={Seng Lei and Chenguang Pan},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{HUDM6026 Homework\_04}
+\author{Seng Lei and Chenguang Pan}
+\date{Feb 05, 2023}
+
+\begin{document}
+\maketitle
+
+\hypertarget{part-01-homework-03s-solution}{%
+\subsection{PART 01: Homework 03's
+Solution}\label{part-01-homework-03s-solution}}
+
+Step 1, input the given variance-covariance matrix; Note, since these
+ten variables follow the standard normal distribution, the values in
+correlation matrix is same to the value in var-cov martix.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{library}\NormalTok{(mvtnorm)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ cov }\OtherTok{=} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DecValTok{10}\NormalTok{,}\DecValTok{10}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# randomly generate one row of data to test this matrix}
+\ErrorTok{\textgreater{}} \CommentTok{\# X \textless{}{-} rmvnorm(1,sigma = cov) \# looking good}
+\end{Highlighting}
+\end{Shaded}
+
+Step 2, write a function to generate 500 observations
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ dat\_gen }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(n, cov)\{}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(}\FunctionTok{rmvnorm}\NormalTok{(n, }\AttributeTok{mean=}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{10}\NormalTok{), }\AttributeTok{sigma=}\NormalTok{cov))\}}
+\SpecialCharTok{\textgreater{}}\NormalTok{ s1 }\OtherTok{\textless{}{-}} \FunctionTok{dat\_gen}\NormalTok{(}\DecValTok{500}\NormalTok{, cov)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{head}\NormalTok{(s1) }\CommentTok{\# looking good}
+\NormalTok{           [,}\DecValTok{1}\NormalTok{]       [,}\DecValTok{2}\NormalTok{]       [,}\DecValTok{3}\NormalTok{]       [,}\DecValTok{4}\NormalTok{]        [,}\DecValTok{5}\NormalTok{]       [,}\DecValTok{6}\NormalTok{]}
+\NormalTok{[}\DecValTok{1}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{1.4495647}  \FloatTok{2.4304171} \SpecialCharTok{{-}}\FloatTok{0.5550750} \SpecialCharTok{{-}}\FloatTok{1.7774593} \SpecialCharTok{{-}}\FloatTok{2.28458843}  \FloatTok{2.5885841}
+\NormalTok{[}\DecValTok{2}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{1.5535961} \SpecialCharTok{{-}}\FloatTok{0.9980552} \SpecialCharTok{{-}}\FloatTok{0.2887975}  \FloatTok{0.1971154} \SpecialCharTok{{-}}\FloatTok{0.58816164} \SpecialCharTok{{-}}\FloatTok{0.3058877}
+\NormalTok{[}\DecValTok{3}\NormalTok{,]  }\FloatTok{0.5264633} \SpecialCharTok{{-}}\FloatTok{0.7758964}  \FloatTok{1.0103404} \SpecialCharTok{{-}}\FloatTok{0.3780678} \SpecialCharTok{{-}}\FloatTok{0.35108755} \SpecialCharTok{{-}}\FloatTok{0.8565865}
+\NormalTok{[}\DecValTok{4}\NormalTok{,]  }\FloatTok{2.0188461} \SpecialCharTok{{-}}\FloatTok{1.4394062}  \FloatTok{1.1914730} \SpecialCharTok{{-}}\FloatTok{1.9042487} \SpecialCharTok{{-}}\FloatTok{0.49660141} \SpecialCharTok{{-}}\FloatTok{1.2617427}
+\NormalTok{[}\DecValTok{5}\NormalTok{,]  }\FloatTok{0.4331412} \SpecialCharTok{{-}}\FloatTok{1.0096178}  \FloatTok{1.9452516} \SpecialCharTok{{-}}\FloatTok{0.1053070}  \FloatTok{0.08668391} \SpecialCharTok{{-}}\FloatTok{1.1676213}
+\NormalTok{[}\DecValTok{6}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{0.6843456} \SpecialCharTok{{-}}\FloatTok{1.5652379}  \FloatTok{0.2742782}  \FloatTok{0.5308587}  \FloatTok{0.63274537} \SpecialCharTok{{-}}\FloatTok{0.5509560}
+\NormalTok{            [,}\DecValTok{7}\NormalTok{]       [,}\DecValTok{8}\NormalTok{]        [,}\DecValTok{9}\NormalTok{]       [,}\DecValTok{10}\NormalTok{]}
+\NormalTok{[}\DecValTok{1}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{0.01079033}  \FloatTok{0.6198942} \SpecialCharTok{{-}}\FloatTok{1.54020439}  \FloatTok{1.35558351}
+\NormalTok{[}\DecValTok{2}\NormalTok{,]  }\FloatTok{0.18792892} \SpecialCharTok{{-}}\FloatTok{1.3272023} \SpecialCharTok{{-}}\FloatTok{0.06897668} \SpecialCharTok{{-}}\FloatTok{1.67448711}
+\NormalTok{[}\DecValTok{3}\NormalTok{,]  }\FloatTok{0.88319683} \SpecialCharTok{{-}}\FloatTok{1.4548352} \SpecialCharTok{{-}}\FloatTok{0.16851130}  \FloatTok{0.79565520}
+\NormalTok{[}\DecValTok{4}\NormalTok{,]  }\FloatTok{0.51101058}  \FloatTok{0.6041980} \SpecialCharTok{{-}}\FloatTok{1.96296845} \SpecialCharTok{{-}}\FloatTok{1.20586395}
+\NormalTok{[}\DecValTok{5}\NormalTok{,]  }\FloatTok{0.04052240} \SpecialCharTok{{-}}\FloatTok{0.3339130} \SpecialCharTok{{-}}\FloatTok{0.34540695} \SpecialCharTok{{-}}\FloatTok{0.82768851}
+\NormalTok{[}\DecValTok{6}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{0.09529678} \SpecialCharTok{{-}}\FloatTok{0.5981320}  \FloatTok{1.13041165} \SpecialCharTok{{-}}\FloatTok{0.04900414}
+\end{Highlighting}
+\end{Shaded}
+
+Step 3, dicotormize the 1st, 3rd, 5th, 6th, 8th, and 9th variable within
+a for-loop.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{3}\NormalTok{,}\DecValTok{5}\NormalTok{,}\DecValTok{6}\NormalTok{,}\DecValTok{8}\NormalTok{,}\DecValTok{9}\NormalTok{)) \{}
+\SpecialCharTok{+}\NormalTok{   s1[,i] }\OtherTok{\textless{}{-}} \FunctionTok{ifelse}\NormalTok{(s1[,i] }\SpecialCharTok{\textgreater{}} \FunctionTok{mean}\NormalTok{(s1[,i]), }\DecValTok{1}\NormalTok{, }\DecValTok{0}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} \FunctionTok{head}\NormalTok{(s1)}
+\NormalTok{     [,}\DecValTok{1}\NormalTok{]       [,}\DecValTok{2}\NormalTok{] [,}\DecValTok{3}\NormalTok{]       [,}\DecValTok{4}\NormalTok{] [,}\DecValTok{5}\NormalTok{] [,}\DecValTok{6}\NormalTok{]        [,}\DecValTok{7}\NormalTok{] [,}\DecValTok{8}\NormalTok{] [,}\DecValTok{9}\NormalTok{]}
+\NormalTok{[}\DecValTok{1}\NormalTok{,]    }\DecValTok{0}  \FloatTok{2.4304171}    \DecValTok{0} \SpecialCharTok{{-}}\FloatTok{1.7774593}    \DecValTok{0}    \DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.01079033}    \DecValTok{1}    \DecValTok{0}
+\NormalTok{[}\DecValTok{2}\NormalTok{,]    }\DecValTok{0} \SpecialCharTok{{-}}\FloatTok{0.9980552}    \DecValTok{0}  \FloatTok{0.1971154}    \DecValTok{0}    \DecValTok{0}  \FloatTok{0.18792892}    \DecValTok{0}    \DecValTok{0}
+\NormalTok{[}\DecValTok{3}\NormalTok{,]    }\DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.7758964}    \DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.3780678}    \DecValTok{0}    \DecValTok{0}  \FloatTok{0.88319683}    \DecValTok{0}    \DecValTok{0}
+\NormalTok{[}\DecValTok{4}\NormalTok{,]    }\DecValTok{1} \SpecialCharTok{{-}}\FloatTok{1.4394062}    \DecValTok{1} \SpecialCharTok{{-}}\FloatTok{1.9042487}    \DecValTok{0}    \DecValTok{0}  \FloatTok{0.51101058}    \DecValTok{1}    \DecValTok{0}
+\NormalTok{[}\DecValTok{5}\NormalTok{,]    }\DecValTok{1} \SpecialCharTok{{-}}\FloatTok{1.0096178}    \DecValTok{1} \SpecialCharTok{{-}}\FloatTok{0.1053070}    \DecValTok{1}    \DecValTok{0}  \FloatTok{0.04052240}    \DecValTok{0}    \DecValTok{0}
+\NormalTok{[}\DecValTok{6}\NormalTok{,]    }\DecValTok{0} \SpecialCharTok{{-}}\FloatTok{1.5652379}    \DecValTok{1}  \FloatTok{0.5308587}    \DecValTok{1}    \DecValTok{0} \SpecialCharTok{{-}}\FloatTok{0.09529678}    \DecValTok{0}    \DecValTok{1}
+\NormalTok{           [,}\DecValTok{10}\NormalTok{]}
+\NormalTok{[}\DecValTok{1}\NormalTok{,]  }\FloatTok{1.35558351}
+\NormalTok{[}\DecValTok{2}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{1.67448711}
+\NormalTok{[}\DecValTok{3}\NormalTok{,]  }\FloatTok{0.79565520}
+\NormalTok{[}\DecValTok{4}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{1.20586395}
+\NormalTok{[}\DecValTok{5}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{0.82768851}
+\NormalTok{[}\DecValTok{6}\NormalTok{,] }\SpecialCharTok{{-}}\FloatTok{0.04900414}
+\end{Highlighting}
+\end{Shaded}
+
+
+\end{document}
