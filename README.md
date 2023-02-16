@@ -12,3 +12,7 @@ For reviewing the solutions, please check the `homework_01_solutions.pdf` pdf fi
 Since this is a personal project, some of the answers may not be 100% correct. Welcome to review and give feedback.  
 
 Please follow the university's "Honor Code" and do not copy and paste directly.
+
+
+## Homework_02 solutions  
+Finished at 02.05.2023
