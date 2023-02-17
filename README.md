@@ -16,3 +16,7 @@ Please follow the university's "Honor Code" and do not copy and paste directly.
 
 ## Homework_02 solutions  
 Finished at 02.05.2023
+
+## Homework_04 solutions  
+Version 1.0 finished by Lei Sen and Chenguang Pan at 02.17.2023.
+Version 1.0 did not figure out how to use `BinNorm` to generate the unattenuated data;
