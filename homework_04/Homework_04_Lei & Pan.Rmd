@@ -1,7 +1,7 @@
 ---
 title: "HUDM6026 Homework_04"
 author: Seng Lei and Chenguang Pan
-date: Feb 05, 2023
+date: Feb 17, 2023
 output:
   pdf_document:
     toc: false
@@ -97,11 +97,13 @@ By setting the chunk's parameter `eval = FALSE`, the code chunk above won't run.
 ### 2.3 Rewrite the data generation function  
 Here, I rewrite the data generation function to ensure each running time will produce a matrix with multivariate data and dichotomous data. But, one should notice, this dataset's correlation matrix is attenuated!!
 
+rewrite the data generation function for several purposes:  
+ - generate data multivariate normal distribution and dichotomous data  
+ - compute the propensity scores
+ - get dichotomous exposure variable A  
+ - get the outcome Y
+
 ```{r}
-# rewrite the data generation function for several purposes:
-# 1. generate data multivariate normal distribution and dichotomous data
-# 2. compute the propensity scores
-# 3. get dichotomous exporsure variable A
 dat_gen <- function(n, cov){ # n is the number of observations
   # generate data from multinormal distribution
   data_01 <- rmvnorm(n, mean=rep(0,10), sigma=cov)
@@ -122,10 +124,33 @@ dat_gen <- function(n, cov){ # n is the number of observations
   # add the exposure to the matrix as 12th columns
   data_01 <- cbind(data_01, A_expo)
   
+  # calculate the outcome Y
+  Y_out <- runif(n)
+  outcome_ <- (1+ exp(-(-3.85+0.3*data_01[,1]-0.36*data_01[,2]-0.73*data_01[,3]
+                        -0.2*data_01[,4]+0.71*data_01[,8]-0.19*data_01[,9]
+                        +0.26*data_01[,10]-0.4*data_01[,12])))^(-1)
+  Y_out <- ifelse(Y_out < outcome_,1,0)
+  # add the exposure to the matrix as 12th columns
+  data_01 <- cbind(data_01, Y_out)
+  
+  # also create a column to load the Lee's version of outcome, which is continuous
+  Y_out_lee <- 3.85 + 0.3*data_01[,1]-0.36*data_01[,2]-0.73*data_01[,3]
+                        -0.2*data_01[,4]+0.71*data_01[,8]-0.19*data_01[,9]
+                        +0.26*data_01[,10]-0.4*data_01[,12]
+  # note: the error term is intentionally ignored here
+  data_01 <- cbind(data_01, Y_out_lee)
   return(data_01)
-  }
+}
 
+# randomly generate a dataset to see the structure
+data_test <- dat_gen(500, cov)
+round(head(data_test),2)
+```   
+The dataset looks good.
 
+### 2.4 Replicate the function  
+Next, I replicate the function for 1000 times.
+```{r}
 R <- 1000
 obs <- 500
 # data_list is a list, each entry is a data matrix with 500 obs
@@ -135,6 +160,47 @@ data_list <- replicate(n = R,
 ```
 
 
+### 2.5 Write a Function to estimate the ATE  
+The first function is the naive function.
+```{r}
+get_ate <- function(data_mat){
+  # transform the matrix into dataframe
+  df_ <- as.data.frame(data_mat)
+  ate <- mean(df_[df_$A_expo == 1,14])- mean(df_[df_$A_expo ==0,14])
+  return(ate)
+}
+```   
+This function runs well. Then put it into the dataframe list.
+```{r}
+ate_list <- sapply(data_list, get_ate)
+ate_average <- mean(ate_list)
+ate_average
+```  
+Based on Lee's continuous outcomes, the 1000 simulated data show that the average treatment effect is `r ate_average`.  
+  
+Next, we use the regression method to get the ate.
+```{r}
+get_ate_2 <- function(data_mat){
+  # transform the matrix into dataframe
+  df_ <- as.data.frame(data_mat)
+  model <- lm(df_[,14] ~ df_[,1]+df_[,2]+df_[,3]+df_[,4]+df_[,5]+df_[,6]+
+                df_[,7]+df_[,8]+df_[,9]+df_[,10] + df_[,12])
+  return(model$coefficients[12])
+}
+```   
+This function runs well. Then put it into the dataframe list.
+```{r}
+ate_list <- sapply(data_list, get_ate_2)
+ate_average <- mean(ate_list)
+ate_average
+```  
+This unbiased estimate of average treatment effect is `r ate_average`. This result is very close to 0, which means the treatment effect is almost none.
+
+### 2.6 Discussion  
+
+(a) The biggest challenge is how to generate the unattenuated data through `BinNorm`. There is no enough information on the internet for reference. This homework actually base on the attenuated data.  
+
+(b) Comparing to the unbiased estimation, the biased (naive) estimation is unreliable and misleading. For the result from the unbiased estimation shows there is no treatment effect, but the alternative one say yes.
 
 
 
