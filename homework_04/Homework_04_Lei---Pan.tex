@@ -187,5 +187,83 @@ a for-loop.
 \end{Highlighting}
 \end{Shaded}
 
+\hypertarget{part-02-homework-03-continued}{%
+\subsection{PART 02: Homework 03
+Continued}\label{part-02-homework-03-continued}}
+
+\hypertarget{choose-the-propensity-score-models}{%
+\subsubsection{2.1 Choose the Propensity Score
+Models}\label{choose-the-propensity-score-models}}
+
+For this homework, I choose the scenario B:
+\[Pr[A=1|W_i]=(1+e^{-(\beta_0+\beta_1W_1+\beta_2W_2+\beta_3W_3+\beta_4W_4+\beta_5W_5 +\beta_6W_6+\beta_7W_7+\beta_2W_2W_2)})^{-1}\].
+
+\hypertarget{using-binnor-to-generate-observations}{%
+\subsubsection{\texorpdfstring{2.2 Using \texttt{BinNor} to Generate
+Observations}{2.2 Using BinNor to Generate Observations}}\label{using-binnor-to-generate-observations}}
+
+In the initial stage for data generating, one problem is if we first
+generate data based on the correlation matrix and then dichotomize some
+of the data according to the means, the final correlation will be
+attenuated comparing to the original one. Based on the Prof.Keller's
+in-class notes, here I choose the function \texttt{BinNor}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{library}\NormalTok{(BinNor)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# import the cor matrix}
+\ErrorTok{\textgreater{}}\NormalTok{ cmat }\OtherTok{\textless{}{-}} \FunctionTok{matrix}\NormalTok{(}\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.2}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\FloatTok{0.9}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{0}\NormalTok{,}
+\SpecialCharTok{+}                \DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{1}\NormalTok{),}\DecValTok{10}\NormalTok{,}\DecValTok{10}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# always report warning: All correlations must be in feasible range!}
+\ErrorTok{\textgreater{}}\NormalTok{ sigma.star }\OtherTok{\textless{}{-}} \FunctionTok{compute.sigma.star}\NormalTok{(}\AttributeTok{no.bin =} \DecValTok{6}\NormalTok{,}
+\SpecialCharTok{+}                                  \AttributeTok{no.nor =} \DecValTok{4}\NormalTok{,}
+\SpecialCharTok{+}                                  \AttributeTok{prop.vec.bin =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{),}
+\SpecialCharTok{+}                                  \AttributeTok{corr.mat =}\NormalTok{ cmat)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}}\NormalTok{ mydata }\OtherTok{\textless{}{-}} \FunctionTok{jointly.generate.binary.normal}\NormalTok{(}\AttributeTok{no.rows =} \DecValTok{500}\NormalTok{,}
+\SpecialCharTok{+}                                          \AttributeTok{no.bin =} \DecValTok{6}\NormalTok{,}
+\SpecialCharTok{+}                                          \AttributeTok{no.nor =} \DecValTok{4}\NormalTok{,}
+\SpecialCharTok{+}                                          \AttributeTok{prop.vec.bin =} \FunctionTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{),}
+\SpecialCharTok{+}                                          \AttributeTok{mean.vec.nor =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{,}\DecValTok{0}\NormalTok{),}
+\SpecialCharTok{+}                                          \AttributeTok{var.nor =} \FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{,}\DecValTok{1}\NormalTok{),}
+\SpecialCharTok{+}                                          \AttributeTok{sigma.star =}\NormalTok{ sigma.star}\SpecialCharTok{$}\NormalTok{sigma\_star,}
+\SpecialCharTok{+}                                          \AttributeTok{continue.with.warning =}\NormalTok{ T)}
+\end{Highlighting}
+\end{Shaded}
+
+By setting the chunk's parameter \texttt{eval\ =\ FALSE}, the code chunk
+above won't run. But after several tries, I can't figure out how
+generate the required data through this \texttt{BinNor}. I temporarily
+skipped this and use the attenuated data to continue this script.
+
+\hypertarget{augmented-the-data-structure}{%
+\subsubsection{2.3 Augmented the Data
+Structure}\label{augmented-the-data-structure}}
+
+Augment your data generation function so that the 11th column is the
+probability of exposure (i.e., the propensity score, ps) based on the
+scenario you pick, the 12th column is the dichotomous exposure variable
+A, and the 13th and final column is the outcome variable Y .
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# calculate the propensity scores}
+\ErrorTok{\textgreater{}}\NormalTok{ R }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\SpecialCharTok{\textgreater{}}\NormalTok{ obs }\OtherTok{\textless{}{-}} \DecValTok{500}
+\SpecialCharTok{\textgreater{}}\NormalTok{ data\_list }\OtherTok{\textless{}{-}} \FunctionTok{replicate}\NormalTok{(}\AttributeTok{n =}\NormalTok{ R,}
+\SpecialCharTok{+}                        \AttributeTok{expr =} \FunctionTok{dat\_gen}\NormalTok{(obs,}\AttributeTok{cov =}\NormalTok{ cov),}
+\SpecialCharTok{+}                        \AttributeTok{simplify =} \ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
 
 \end{document}

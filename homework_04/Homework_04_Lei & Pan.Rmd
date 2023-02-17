@@ -55,7 +55,86 @@ head(s1)
 ```  
 
 ## PART 02: Homework 03 Continued   
-For this homework, I choose the scenario B: $$Pr[A=1|W_i]=(1+e^{-(\beta_0+\beta_1W_1+\beta_2W_2+\beta_3W_3+\beta_4W_4+\beta_5W_5 +\beta_6W_6+\beta_7W_7+\beta_2W_2W_2)})^{-1}$$.
+### 2.1 Choose the Propensity Score Models  
+
+For this homework, I choose the scenario B: $$Pr[A=1|W_i]=(1+e^{-(\beta_0+\beta_1W_1+\beta_2W_2+\beta_3W_3+\beta_4W_4+\beta_5W_5 +\beta_6W_6+\beta_7W_7+\beta_2W_2W_2)})^{-1}$$.  
+
+### 2.2 Using `BinNor` to Generate Observations  
+
+In the initial stage for data generating, one problem is if we first generate data based on the correlation matrix and then dichotomize some of the data according to the means, the final correlation will be attenuated comparing to the original one. Based on the Prof.Keller's in-class notes, here I choose the function `BinNor`. 
+
+```{r, eval=FALSE}
+library(BinNor)
+# import the cor matrix
+cmat <- matrix(c(1,0,0,0,0.2,0,0,0,0,0,
+               0,1,0,0,0,0.9,0,0,0,0,
+               0,0,1,0,0,0,0,0.2,0,0,
+               0,0,0,1,0,0,0,0,0.9,0,
+               0.2,0,0,0,1,0,0,0,0,0,
+               0,0.9,0,0,0,1,0,0,0,0,
+               0,0,0,0,0,0,1,0,0,0,
+               0,0,0.2,0,0,0,0,1,0,0,
+               0,0,0,0.9,0,0,0,0,1,0,
+               0,0,0,0,0,0,0,0,0,1),10,10)
+
+# always report warning: All correlations must be in feasible range!
+sigma.star <- compute.sigma.star(no.bin = 6,
+                                 no.nor = 4,
+                                 prop.vec.bin = c(0.5,0.5,0.5,0.5,0.5,0.5),
+                                 corr.mat = cmat)
+
+mydata <- jointly.generate.binary.normal(no.rows = 500,
+                                         no.bin = 6,
+                                         no.nor = 4,
+                                         prop.vec.bin = c(0.5,0.5,0.5,0.5,0.5,0.5),
+                                         mean.vec.nor = c(0,0,0,0),
+                                         var.nor = c(1,1,1,1),
+                                         sigma.star = sigma.star$sigma_star,
+                                         continue.with.warning = T)
+```
+By setting the chunk's parameter `eval = FALSE`, the code chunk above won't run. But after several tries, I can't figure out how generate the required data through this `BinNor`. I temporarily skipped this and use the attenuated data to continue this script.
+
+### 2.3 Rewrite the data generation function  
+Here, I rewrite the data generation function to ensure each running time will produce a matrix with multivariate data and dichotomous data. But, one should notice, this dataset's correlation matrix is attenuated!!
+
+```{r}
+# rewrite the data generation function for several purposes:
+# 1. generate data multivariate normal distribution and dichotomous data
+# 2. compute the propensity scores
+# 3. get dichotomous exporsure variable A
+dat_gen <- function(n, cov){ # n is the number of observations
+  # generate data from multinormal distribution
+  data_01 <- rmvnorm(n, mean=rep(0,10), sigma=cov)
+  # dichotomize the columns
+  for (i in c(1,3,5,6,8,9)) {data_01[,i] <- ifelse(data_01[,i] > mean(data_01[,i]), 1, 0)}
+  
+  # compute propensity score 
+  linear_part <- (0 + 0.8 * data_01[,1] - 0.25*data_01[,2]+ 0.6*data_01[,3]
+                   -0.4*data_01[,4] - 0.8*data_01[,5] - 0.5*data_01[,6]
+                   +0.7*data_01[,7] - 0.25*data_01[,2]*data_01[,2])/(-1)
+  ps <- sapply(linear_part, function(x){(1 + exp(x))^(-1)})
+  # add the propensity score vector to the matrix as 11th columns
+  data_01 <- cbind(data_01, ps)
+  
+  # compute the dichotomous exposure
+  A_expo <- runif(n)
+  A_expo <- ifelse(A_expo < ps, 1, 0)
+  # add the exposure to the matrix as 12th columns
+  data_01 <- cbind(data_01, A_expo)
+  
+  return(data_01)
+  }
+
+
+R <- 1000
+obs <- 500
+# data_list is a list, each entry is a data matrix with 500 obs
+data_list <- replicate(n = R,
+                       expr = dat_gen(obs,cov = cov),
+                       simplify = FALSE)
+```
+
+
 
 
 
