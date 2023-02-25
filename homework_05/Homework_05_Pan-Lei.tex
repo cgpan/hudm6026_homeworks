@@ -161,4 +161,150 @@ types and add a legend.} \textbf{MY SOLUTION:}
 
 \includegraphics{Homework_05_Pan-Lei_files/figure-latex/unnamed-chunk-2-1.pdf}
 
+\hypertarget{q3}{%
+\subsection{Q3:}\label{q3}}
+
+\emph{Finish the functions that I started in the R code notes for
+univariate optimization for the golden section search, the bisection
+method, and Newton's method.}
+
+\textbf{MY SOLUTION:}\\
+\#\#\# 3.1 The Golden Section Search
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\# FUNCTION TO DO THE GOLDEN SECTION SEARCH \#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}}\NormalTok{ golden }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(f, int, }\AttributeTok{precision =} \FloatTok{1e{-}6}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \{}
+\SpecialCharTok{+}   \CommentTok{\# ::: This function implements the golden section search for a }
+\SpecialCharTok{+}   \CommentTok{\# ::: *minimum* for the function \textquotesingle{}f\textquotesingle{} on the range [int]}
+\SpecialCharTok{+}   \CommentTok{\# ::: with precision no greater than \textquotesingle{}precision\textquotesingle{}.}
+\SpecialCharTok{+}   \CommentTok{\# ::: Note: \textquotesingle{}int\textquotesingle{} is an interval such as c(2,3).}
+\SpecialCharTok{+}   \CommentTok{\# ::: If you want to *maximize*, multiply your function by {-}1.}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}\NormalTok{   rho }\OtherTok{\textless{}{-}}\NormalTok{ (}\DecValTok{3}\SpecialCharTok{{-}}\FunctionTok{sqrt}\NormalTok{(}\DecValTok{5}\NormalTok{))}\SpecialCharTok{/}\DecValTok{2} \CommentTok{\# ::: Golden ratio}
+\SpecialCharTok{+}   \CommentTok{\# ::: Work out first iteration here}
+\SpecialCharTok{+}   \CommentTok{\# select two test points, that is, move the x=a\_0 to the right}
+\SpecialCharTok{+}   \CommentTok{\# move the x=b\_0 to the left, to shrink the range.}
+\SpecialCharTok{+}\NormalTok{   f\_a }\OtherTok{\textless{}{-}} \FunctionTok{f}\NormalTok{(int[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ rho}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}
+\SpecialCharTok{+}\NormalTok{   f\_b }\OtherTok{\textless{}{-}} \FunctionTok{f}\NormalTok{(int[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ rho}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}
+\SpecialCharTok{+}   \DocumentationTok{\#\#\# How many iterations will we need to reach the desired precision?}
+\SpecialCharTok{+}\NormalTok{   N }\OtherTok{\textless{}{-}} \FunctionTok{ceiling}\NormalTok{(}\FunctionTok{log}\NormalTok{(precision}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}\SpecialCharTok{/}\FunctionTok{log}\NormalTok{(}\DecValTok{1}\SpecialCharTok{{-}}\NormalTok{rho))}
+\SpecialCharTok{+}   \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{(N))                    }\CommentTok{\# index the number of iterations}
+\SpecialCharTok{+}\NormalTok{   \{}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (f\_a }\SpecialCharTok{\textless{}}\NormalTok{ f\_b)  }
+\SpecialCharTok{+}\NormalTok{     \{}
+\SpecialCharTok{+}\NormalTok{       int[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ int[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}} \FloatTok{0.382}\SpecialCharTok{*}\NormalTok{(int[}\DecValTok{2}\NormalTok{]}\SpecialCharTok{{-}}\NormalTok{int[}\DecValTok{1}\NormalTok{])}
+\SpecialCharTok{+}\NormalTok{       f\_b }\OtherTok{\textless{}{-}} \FunctionTok{f}\NormalTok{(int[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{{-}}\NormalTok{ rho}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}
+\SpecialCharTok{+}\NormalTok{     \} }\ControlFlowTok{else}\NormalTok{\{}
+\SpecialCharTok{+}       \ControlFlowTok{if}\NormalTok{ (f\_a }\SpecialCharTok{\textgreater{}=}\NormalTok{ f\_b) }\CommentTok{\# already have "else" above, is this if expression redundant?}
+\SpecialCharTok{+}\NormalTok{       \{}
+\SpecialCharTok{+}\NormalTok{         int[}\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ int[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+} \FloatTok{0.382}\SpecialCharTok{*}\NormalTok{(int[}\DecValTok{2}\NormalTok{]}\SpecialCharTok{{-}}\NormalTok{int[}\DecValTok{1}\NormalTok{])}
+\SpecialCharTok{+}\NormalTok{         f\_a }\OtherTok{\textless{}{-}} \FunctionTok{f}\NormalTok{(int[}\DecValTok{1}\NormalTok{] }\SpecialCharTok{+}\NormalTok{ rho}\SpecialCharTok{*}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}
+\SpecialCharTok{+}\NormalTok{       \} \}}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}\NormalTok{   int}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{the-bisection-method}{%
+\subsubsection{3.2 The Bisection Method}\label{the-bisection-method}}
+
+More information about this method can be found on \emph{Page 116} of
+Chong and Zak (2013).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\# FUNCTION FOR BISECTION METHOD \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}}\NormalTok{ bisection }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(f\_prime, int, }\AttributeTok{precision =} \FloatTok{1e{-}7}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \{}
+\SpecialCharTok{+}   \CommentTok{\# ::: f\_prime is the function for the first derivative}
+\SpecialCharTok{+}   \CommentTok{\# ::: of f, int is an interval such as c(0,1) which }
+\SpecialCharTok{+}   \CommentTok{\# ::: denotes the domain}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}\NormalTok{   N }\OtherTok{\textless{}{-}} \FunctionTok{ceiling}\NormalTok{(}\FunctionTok{log}\NormalTok{(precision}\SpecialCharTok{/}\NormalTok{(}\FunctionTok{diff}\NormalTok{(int)))}\SpecialCharTok{/}\FunctionTok{log}\NormalTok{(.}\DecValTok{5}\NormalTok{))}
+\SpecialCharTok{+}   \CommentTok{\# find the midpoint of the initial uncertainty range}
+\SpecialCharTok{+}\NormalTok{   midpoint }\OtherTok{\textless{}{-}}\NormalTok{ (int[}\DecValTok{1}\NormalTok{]}\SpecialCharTok{+}\NormalTok{int[}\DecValTok{2}\NormalTok{]) }\SpecialCharTok{/}\DecValTok{2}
+\SpecialCharTok{+}   \CommentTok{\# evaluate the f\_prime on the midpoint}
+\SpecialCharTok{+}\NormalTok{   f\_prime\_a }\OtherTok{\textless{}{-}} \FunctionTok{f\_prime}\NormalTok{(midpoint)}
+\SpecialCharTok{+}   \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{N)}
+\SpecialCharTok{+}\NormalTok{   \{}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{(f\_prime\_a }\SpecialCharTok{\textless{}} \DecValTok{0}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{     \{}
+\SpecialCharTok{+}       \CommentTok{\# if the f\_prime on the midpoint is less than 0,}
+\SpecialCharTok{+}       \CommentTok{\# the minimizer must be on the right side of midpoint.}
+\SpecialCharTok{+}\NormalTok{       int[}\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ midpoint}
+\SpecialCharTok{+}       \CommentTok{\# update the uncertainty range}
+\SpecialCharTok{+}\NormalTok{     \} }\ControlFlowTok{else}
+\SpecialCharTok{+}       \ControlFlowTok{if}\NormalTok{(f\_prime\_a }\SpecialCharTok{\textgreater{}} \DecValTok{0}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{       \{}
+\SpecialCharTok{+}         \CommentTok{\# if the f\_prime on the midpoint is less than 0,}
+\SpecialCharTok{+}         \CommentTok{\# the minimizer must be on the left side of midpoint.}
+\SpecialCharTok{+}\NormalTok{         int[}\DecValTok{2}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ midpoint}
+\SpecialCharTok{+}\NormalTok{       \} }\ControlFlowTok{else}
+\SpecialCharTok{+}         \ControlFlowTok{if}\NormalTok{(f\_prime\_a }\SpecialCharTok{==} \DecValTok{0}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{         \{}
+\SpecialCharTok{+}           \ControlFlowTok{break}
+\SpecialCharTok{+}\NormalTok{         \}}
+\SpecialCharTok{+}     \CommentTok{\# ::: FILL IN CODE HERE (UPDATE)}
+\SpecialCharTok{+}\NormalTok{     midpoint }\OtherTok{\textless{}{-}}\NormalTok{ (int[}\DecValTok{1}\NormalTok{]}\SpecialCharTok{+}\NormalTok{int[}\DecValTok{2}\NormalTok{]) }\SpecialCharTok{/}\DecValTok{2}
+\SpecialCharTok{+}\NormalTok{     f\_prime\_a }\OtherTok{\textless{}{-}} \FunctionTok{f\_prime}\NormalTok{(midpoint)}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}\NormalTok{   int}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{the-newtons-method}{%
+\subsubsection{3.3 The Newton's Method}\label{the-newtons-method}}
+
+More information about this method can be found on \emph{Page 116} of
+Chong and Zak (2013).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\# FUNCTION FOR NEWTON\textquotesingle{}S METHOD \#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#\#}
+\ErrorTok{\textgreater{}}\NormalTok{ newton }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(f\_prime, f\_dbl, }\AttributeTok{precision =} \FloatTok{1e{-}6}\NormalTok{, start)}
+\SpecialCharTok{+}\NormalTok{ \{}
+\SpecialCharTok{+}   \CommentTok{\# ::: f\_prime is first derivative function}
+\SpecialCharTok{+}   \CommentTok{\# ::: f\_dbl is second derivative function}
+\SpecialCharTok{+}   \CommentTok{\# ::: start is starting \textquotesingle{}guess\textquotesingle{}}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}\NormalTok{   x\_old }\OtherTok{\textless{}{-}}\NormalTok{ start}
+\SpecialCharTok{+}\NormalTok{   x\_new }\OtherTok{\textless{}{-}}\NormalTok{ x\_old }\SpecialCharTok{{-}} \FunctionTok{f\_prime}\NormalTok{(x)}\SpecialCharTok{/}\FunctionTok{f\_dbl}\NormalTok{(x)}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}\NormalTok{   i }\OtherTok{\textless{}{-}} \DecValTok{1} \CommentTok{\# ::: use \textquotesingle{}i\textquotesingle{} to print iteration number}
+\SpecialCharTok{+}   \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iteration "}\NormalTok{, i, }\StringTok{"; Estimate = "}\NormalTok{, x\_new) )}
+\SpecialCharTok{+}   \ControlFlowTok{while}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(x\_new}\SpecialCharTok{{-}}\NormalTok{x\_old) }\SpecialCharTok{\textgreater{}}\NormalTok{ precision)}
+\SpecialCharTok{+}\NormalTok{   \{}
+\SpecialCharTok{+}\NormalTok{     x\_old }\OtherTok{\textless{}{-}}\NormalTok{ x\_new}
+\SpecialCharTok{+}\NormalTok{     x\_new }\OtherTok{\textless{}{-}}\NormalTok{ x\_old }\SpecialCharTok{{-}} \FunctionTok{f\_prime}\NormalTok{(x)}\SpecialCharTok{/}\FunctionTok{f\_dbl}\NormalTok{(x)}
+\SpecialCharTok{+}     \CommentTok{\# ::: redefine variables and calculate new estimate}
+\SpecialCharTok{+}     
+\SpecialCharTok{+}     \CommentTok{\# ::: keep track of iteration history}
+\SpecialCharTok{+}     \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iteration "}\NormalTok{, i}\SpecialCharTok{+}\DecValTok{1}\NormalTok{, }\StringTok{"; Estimate = "}\NormalTok{, x\_new) )}
+\SpecialCharTok{+}\NormalTok{     i }\OtherTok{\textless{}{-}}\NormalTok{ i }\SpecialCharTok{+} \DecValTok{1}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}\NormalTok{   x\_new}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{q4}{%
+\subsection{Q4:}\label{q4}}
+
+\emph{Apply each of the three functions to this example to discover the
+minimum. Keep track of and report the number of iterations required for
+each method. Report the coordinates of the minimum discovered by each of
+the three functions as well as the number of iterations required}
+
+\textbf{MY SOLUTION:}
+
 \end{document}
