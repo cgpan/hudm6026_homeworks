@@ -210,7 +210,7 @@ method, and Newton's method.}
 \SpecialCharTok{+}\NormalTok{   \}}
 \SpecialCharTok{+}\NormalTok{   int}
 \SpecialCharTok{+}   \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iteration for "}\NormalTok{,N,}\StringTok{" times;"}\NormalTok{,}
-\SpecialCharTok{+}                \StringTok{" The location is at "}\NormalTok{, }\FunctionTok{round}\NormalTok{(int[}\DecValTok{1}\NormalTok{],}\DecValTok{6}\NormalTok{)))}
+\SpecialCharTok{+}                \StringTok{" The maximum value is at"}\NormalTok{, }\FunctionTok{round}\NormalTok{(int[}\DecValTok{1}\NormalTok{],}\DecValTok{6}\NormalTok{)))}
 \SpecialCharTok{+}\NormalTok{ \}}
 \end{Highlighting}
 \end{Shaded}
@@ -262,7 +262,7 @@ Chong and Zak (2013).
 \SpecialCharTok{+}\NormalTok{   \}}
 \SpecialCharTok{+}\NormalTok{   int}
 \SpecialCharTok{+}   \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iteration for "}\NormalTok{,N,}\StringTok{" times;"}\NormalTok{,}
-\SpecialCharTok{+}                \StringTok{" The location is at "}\NormalTok{, }\FunctionTok{round}\NormalTok{(int[}\DecValTok{1}\NormalTok{],}\DecValTok{6}\NormalTok{)))}
+\SpecialCharTok{+}                \StringTok{" The maximum value is at "}\NormalTok{, }\FunctionTok{round}\NormalTok{(int[}\DecValTok{1}\NormalTok{],}\DecValTok{6}\NormalTok{)))}
 \SpecialCharTok{+}\NormalTok{ \}}
 \end{Highlighting}
 \end{Shaded}
@@ -312,7 +312,7 @@ Search}\label{apply-the-golden-section-search}}
 \begin{Shaded}
 \begin{Highlighting}[]
 \SpecialCharTok{\textgreater{}} \FunctionTok{golden}\NormalTok{(f\_neg, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{))}
-\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iteration for 32 times;The location is at 0.368352"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iteration for 32 times; The maximum value is at0.368352"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -323,7 +323,7 @@ Method}\label{apply-the-bisection-method}}
 \begin{Shaded}
 \begin{Highlighting}[]
 \SpecialCharTok{\textgreater{}} \FunctionTok{bisection}\NormalTok{(f\_prime\_neg, }\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{4}\NormalTok{))}
-\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iteration for 26 times;The location is at 0.368352"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iteration for 26 times; The maximum value is at 0.368352"}
 \end{Highlighting}
 \end{Shaded}
 
@@ -380,10 +380,194 @@ function.
 \end{Shaded}
 
 All three methods have the identical results, that is the maximum point
-is at \(x=.368352\). As for the iteration times at the x interval
+of the given function is at \(x=.368352\), as shown in
+\texttt{Figure.1}. As for the iteration times at the x interval
 \([0,4]\), the Golden Section Search iterated 32 times; the Bisection
 Method iterated 26 times. However, Newton's method iteration time
 largely depends on the start numbers. That is, the more guessing number
 close to the target, the less times needed.
+
+\hypertarget{q5}{%
+\subsection{Q5:}\label{q5}}
+
+\emph{Did the methods perform as you expected in terms of the number of
+iterations? Why or why not?}
+
+\textbf{MY SOLUTION:}
+
+Yes. The bisection method has larger ``step'' than golden search method,
+therefore, the search iteration should be more efficient for bisection
+method. However, Newton's method iteration time largely depends on the
+start numbers. That is, the more guessing number close to the target,
+the less times needed.
+
+\hypertarget{q6}{%
+\subsection{Q6:}\label{q6}}
+
+\emph{Use function persp3d() in package rgl to plot function f on
+{[}-3,3{]}\ldots.}
+
+\textbf{MY SOLUTION:}\\
+I write the function first.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# write the function}
+\ErrorTok{\textgreater{}}\NormalTok{ f\_bi }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_1, x\_2)\{}
+\SpecialCharTok{+}\NormalTok{   out\_ }\OtherTok{\textless{}{-}}\NormalTok{ x\_1}\SpecialCharTok{\^{}}\DecValTok{4} \SpecialCharTok{+}\NormalTok{ x\_2}\SpecialCharTok{\^{}}\DecValTok{4} \SpecialCharTok{{-}} \DecValTok{2}\SpecialCharTok{*}\NormalTok{x\_1}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{x\_1}\SpecialCharTok{*}\NormalTok{x\_2 }\SpecialCharTok{{-}} \DecValTok{3}\SpecialCharTok{*}\NormalTok{x\_2}\SpecialCharTok{\^{}}\DecValTok{2} \SpecialCharTok{+} \DecValTok{6}\SpecialCharTok{*}\NormalTok{x\_1 }\SpecialCharTok{{-}} \DecValTok{4}\SpecialCharTok{*}\NormalTok{x\_2 }\SpecialCharTok{+} \DecValTok{10}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(out\_)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+Then, plot the 3-d surface of function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{library}\NormalTok{(rgl)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# Define grid for plotting}
+\ErrorTok{\textgreater{}}\NormalTok{ x }\OtherTok{=} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{by =}\NormalTok{ .}\DecValTok{05}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ y }\OtherTok{=} \FunctionTok{seq}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{3}\NormalTok{, }\DecValTok{3}\NormalTok{, }\AttributeTok{by =}\NormalTok{ .}\DecValTok{05}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ xy }\OtherTok{\textless{}{-}} \FunctionTok{expand.grid}\NormalTok{(x,y)}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# Calculate height of function}
+\ErrorTok{\textgreater{}} \CommentTok{\# xy[,1] is vector of \textquotesingle{}x\textquotesingle{} values; xy[,2] is vector of \textquotesingle{}y\textquotesingle{} values}
+\ErrorTok{\textgreater{}}\NormalTok{ z }\OtherTok{\textless{}{-}} \FunctionTok{mapply}\NormalTok{(}\AttributeTok{FUN =}\NormalTok{ f\_bi, xy[,}\DecValTok{1}\NormalTok{], xy[,}\DecValTok{2}\NormalTok{])}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \DocumentationTok{\#\#\# Plot the surface over the domain}
+\ErrorTok{\textgreater{}} \FunctionTok{plot3d}\NormalTok{(xy[,}\DecValTok{1}\NormalTok{], xy[,}\DecValTok{2}\NormalTok{], z, }\AttributeTok{type =} \StringTok{"n"}\NormalTok{, }\AttributeTok{radius =} \FloatTok{1.5}\NormalTok{, }
+\SpecialCharTok{+}        \AttributeTok{col =} \StringTok{"cadetblue1"}\NormalTok{, }\AttributeTok{zlim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{90}\NormalTok{, }\DecValTok{90}\NormalTok{), }\AttributeTok{xlab =} \StringTok{""}\NormalTok{, }
+\SpecialCharTok{+}        \AttributeTok{ylab =} \StringTok{""}\NormalTok{, }\AttributeTok{zlab =} \StringTok{""}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{surface3d}\NormalTok{(x, y, }\AttributeTok{z =} \FunctionTok{matrix}\NormalTok{(z,}\FunctionTok{length}\NormalTok{(x)), }\AttributeTok{col =} \StringTok{"cadetblue1"}\NormalTok{, }
+\SpecialCharTok{+}           \AttributeTok{zlim =} \FunctionTok{c}\NormalTok{(}\SpecialCharTok{{-}}\DecValTok{90}\NormalTok{, }\DecValTok{90}\NormalTok{), }\AttributeTok{alpha =}\NormalTok{ .}\DecValTok{9}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ knitr}\SpecialCharTok{::}\FunctionTok{include\_graphics}\NormalTok{(}\StringTok{"plot{-}3d.png"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.7\linewidth,height=0.5\textheight]{plot-3d}
+
+From the 3D plot, I guess the minimum point is around (-2.1, 1.8, -11).
+
+\hypertarget{q7}{%
+\subsection{Q7:}\label{q7}}
+
+\emph{Find the partial derivatives of f with respect to x1 and x2 and
+write a function called grad\_f() that gives the gradient of f.}
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# write the original function}
+\ErrorTok{\textgreater{}}\NormalTok{ f\_origin }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_1, x\_2)\{}
+\SpecialCharTok{+}\NormalTok{   out\_ }\OtherTok{\textless{}{-}}\NormalTok{ x\_1}\SpecialCharTok{\^{}}\DecValTok{4}\SpecialCharTok{+}\NormalTok{x\_2}\SpecialCharTok{\^{}}\DecValTok{4{-}2}\SpecialCharTok{*}\NormalTok{x\_1}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{+}\DecValTok{2}\SpecialCharTok{*}\NormalTok{x\_1}\SpecialCharTok{*}\NormalTok{x\_2}\DecValTok{{-}3}\SpecialCharTok{*}\NormalTok{x\_2}\SpecialCharTok{\^{}}\DecValTok{2}\SpecialCharTok{+}\DecValTok{6}\SpecialCharTok{*}\NormalTok{x\_1}\DecValTok{{-}4}\SpecialCharTok{*}\NormalTok{x\_2}\SpecialCharTok{+}\DecValTok{10}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(out\_)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# write the two partial derivatives}
+\ErrorTok{\textgreater{}}\NormalTok{ dfdx\_1 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_1, x\_2)\{}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x\_1}\SpecialCharTok{\^{}}\DecValTok{3{-}4}\SpecialCharTok{*}\NormalTok{x\_1 }\SpecialCharTok{+} \DecValTok{2}\SpecialCharTok{*}\NormalTok{x\_2}\SpecialCharTok{+}\DecValTok{6}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}}\NormalTok{ dfdx\_2 }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_1, x\_2)\{}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(}\DecValTok{4}\SpecialCharTok{*}\NormalTok{x\_2}\SpecialCharTok{\^{}}\DecValTok{3}\SpecialCharTok{+}\DecValTok{2}\SpecialCharTok{*}\NormalTok{x\_1}\DecValTok{{-}6}\SpecialCharTok{*}\NormalTok{x\_2}\DecValTok{{-}4}\NormalTok{)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# write the gradient descent function}
+\ErrorTok{\textgreater{}}\NormalTok{ grad\_f }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x\_1, x\_2)\{}\FunctionTok{c}\NormalTok{(}\FunctionTok{dfdx\_1}\NormalTok{(x\_1,x\_2), }\FunctionTok{dfdx\_2}\NormalTok{(x\_1,x\_2))\}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{q8}{%
+\subsection{Q8:}\label{q8}}
+
+\emph{Write a function to implement gradient ascent with arguments for
+the start point, the number of iterations, the step size alpha\ldots{}}
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ gradient\_d }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(f\_original, }\CommentTok{\# the original function}
+\SpecialCharTok{+}\NormalTok{                        grad\_f, }\CommentTok{\# the gradient function}
+\SpecialCharTok{+}\NormalTok{                        start\_point, }\CommentTok{\# the start point, a vector}
+\SpecialCharTok{+}                        \AttributeTok{max\_iter=}\DecValTok{100}\NormalTok{, }\CommentTok{\# the maximum number of iteration}
+\SpecialCharTok{+}                        \AttributeTok{alpha=}\FloatTok{0.03}\NormalTok{, }\CommentTok{\# learning rate/ step size}
+\SpecialCharTok{+}                        \AttributeTok{epsilon=}\FloatTok{1e{-}5} \CommentTok{\# stopping criterion}
+\SpecialCharTok{+}\NormalTok{ )\{}
+\SpecialCharTok{+}   \CommentTok{\# initial settings}
+\SpecialCharTok{+}\NormalTok{   p\_old }\OtherTok{\textless{}{-}}\NormalTok{ start\_point;i }\OtherTok{\textless{}{-}} \DecValTok{1}\NormalTok{;check }\OtherTok{\textless{}{-}} \DecValTok{1}
+\SpecialCharTok{+}   \ControlFlowTok{while}\NormalTok{ (check }\SpecialCharTok{\textgreater{}}\NormalTok{ epsilon) \{}
+\SpecialCharTok{+}     \CommentTok{\# print the iteration information at each 10 rounds}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{==}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ i}\SpecialCharTok{\%\%}\DecValTok{10} \SpecialCharTok{==} \DecValTok{0}\NormalTok{)\{}
+\SpecialCharTok{+}      \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iter "}\NormalTok{, i, }\StringTok{"; f(x\_1, x\_2)= "}\NormalTok{, }\FunctionTok{f\_original}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{], p\_old[}\DecValTok{2}\NormalTok{])))}
+\SpecialCharTok{+}\NormalTok{     \}}
+\SpecialCharTok{+}     \CommentTok{\# Stop condition and warning}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textgreater{}}\NormalTok{ max\_iter) \{}
+\SpecialCharTok{+}       \FunctionTok{print}\NormalTok{(}\StringTok{"Exceed maximum number of iterations"}\NormalTok{)}
+\SpecialCharTok{+}       \ControlFlowTok{break}
+\SpecialCharTok{+}\NormalTok{       \}}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{]) }\SpecialCharTok{\textgreater{}} \DecValTok{3} \SpecialCharTok{|}\FunctionTok{abs}\NormalTok{(p\_old[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\textgreater{}}\DecValTok{3}\NormalTok{)) \{}
+\SpecialCharTok{+}       \FunctionTok{print}\NormalTok{(}\StringTok{"Exceed the Given Range"}\NormalTok{)}
+\SpecialCharTok{+}       \ControlFlowTok{break}
+\SpecialCharTok{+}\NormalTok{       \}}
+\SpecialCharTok{+}     \CommentTok{\# load the gradient}
+\SpecialCharTok{+}\NormalTok{     gradient\_ }\OtherTok{\textless{}{-}} \FunctionTok{grad\_f}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{], p\_old[}\DecValTok{2}\NormalTok{])}
+\SpecialCharTok{+}     \CommentTok{\# normalize the the gradient vector}
+\SpecialCharTok{+}\NormalTok{     gradient\_norm }\OtherTok{\textless{}{-}}\NormalTok{ gradient\_}\SpecialCharTok{/}\FunctionTok{sqrt}\NormalTok{(gradient\_}\SpecialCharTok{\%*\%}\NormalTok{gradient\_)}
+\SpecialCharTok{+}     \CommentTok{\# update the point coordination with gradient * learning rate}
+\SpecialCharTok{+}\NormalTok{     p\_new }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_norm}
+\SpecialCharTok{+}     \CommentTok{\# check the updating rate of p\_new, if less than epsilong, stop}
+\SpecialCharTok{+}\NormalTok{     check }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{((p\_new}\SpecialCharTok{{-}}\NormalTok{p\_old)}\SpecialCharTok{\%*\%}\NormalTok{(p\_new}\SpecialCharTok{{-}}\NormalTok{p\_old))}\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(p\_old }\SpecialCharTok{\%*\%}\NormalTok{ p\_old)}
+\SpecialCharTok{+}     \CommentTok{\# redefine the old point to send for next updating }
+\SpecialCharTok{+}\NormalTok{     p\_old }\OtherTok{\textless{}{-}}\NormalTok{ p\_new}
+\SpecialCharTok{+}\NormalTok{     i }\OtherTok{\textless{}{-}}\NormalTok{ i }\SpecialCharTok{+} \DecValTok{1}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}   \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"The minimum point is around "}\NormalTok{, }
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{],}\DecValTok{4}\NormalTok{),}\StringTok{" "}\NormalTok{,}
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(p\_old[}\DecValTok{2}\NormalTok{],}\DecValTok{4}\NormalTok{),}\StringTok{" "}\NormalTok{,}
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(}\FunctionTok{f\_origin}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{],p\_old[}\DecValTok{2}\NormalTok{]),}\DecValTok{4}\NormalTok{)))}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+Then, try this gradient descent method on the given function.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{gradient\_d}\NormalTok{(f\_origin, grad\_f, }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{))}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 1; f(x\_1, x\_2)= 15"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 10; f(x\_1, x\_2)= 10.5754827068404"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 20; f(x\_1, x\_2)= 7.48319133042501"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 30; f(x\_1, x\_2)= 5.07775708084357"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 40; f(x\_1, x\_2)= 2.58313967447279"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 50; f(x\_1, x\_2)= {-}0.242482652266101"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 60; f(x\_1, x\_2)= {-}3.34386884955452"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 70; f(x\_1, x\_2)= {-}6.45537944677232"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 80; f(x\_1, x\_2)= {-}9.11743349118743"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 90; f(x\_1, x\_2)= {-}10.6832761634467"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 100; f(x\_1, x\_2)= {-}10.8258617496505"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Exceed maximum number of iterations"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"The minimum point is around {-}1.5549 1.6273 {-}10.8211"}
+\end{Highlighting}
+\end{Shaded}
+
+For text space concern, I choose to print the iteration information at
+each 10 rounds.The final result shows that the minimum point is around
+(-1.5549, 1.6273, -10.8211), which is close to the observed possible
+minimum point (-2.1, 1.8, -11) (in my response to Question 6).
+
+\hypertarget{q9}{%
+\subsection{Q9:}\label{q9}}
+
+\emph{Write a function to implement gradient ascent with arguments for
+the start point, the number of iterations, the step size alpha\ldots{}}
+
+\textbf{MY SOLUTION:}\\
+If one wants to make the steepest descent, they can adjust the learning
+rate(step size). But one caveat is, a big step size will cause the point
+oscillating around the minimum point and possible never reaching the
+target. So, a dynamic learning rate is necessary, That is, the learning
+rate can adaptively change itself from big size at the beginning to
+small when closing to the target.
 
 \end{document}

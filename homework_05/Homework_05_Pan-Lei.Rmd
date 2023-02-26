@@ -247,7 +247,7 @@ surface3d(x, y, z = matrix(z,length(x)), col = "cadetblue1",
 knitr::include_graphics("plot-3d.png")
 ```  
 
-From the 3D plot, I guess the minimum point is around (1.8, -2.1, -11). 
+From the 3D plot, I guess the minimum point is around (-2.1, 1.8, -11). 
 
 ## Q7:
 *Find the partial derivatives of f with respect to x1 and x2 and write a function called grad_f() that gives the gradient of f.*   
@@ -278,21 +278,28 @@ grad_f <- function(x_1, x_2){c(dfdx_1(x_1,x_2), dfdx_2(x_1,x_2))}
 **MY SOLUTION:**   
 ```{r}
 gradient_d <- function(f_original, # the original function
-                      grad_f, # the gradient function
-                      start_point, # the start point, a vector
-                      max_iter=10000, # the maximum number of iteration
-                      alpha=0.2, # learning rate/ step size
-                      epsilon=1e-5 # stopping criterion
+                       grad_f, # the gradient function
+                       start_point, # the start point, a vector
+                       max_iter=100, # the maximum number of iteration
+                       alpha=0.03, # learning rate/ step size
+                       epsilon=1e-5 # stopping criterion
 ){
   # initial settings
-  p_old <- start_point
-  i <- 1
-  check <- 1
+  p_old <- start_point;i <- 1;check <- 1
   while (check > epsilon) {
-    # print the iteration information
-    print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
+    # print the iteration information at each 10 rounds
+    if (i ==1 | i%%10 == 0){
+     print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
+    }
     # Stop condition and warning
-    #if (i > max_iter) stop("Exceed maximum number of iterations")
+    if (i > max_iter) {
+      print("Exceed maximum number of iterations")
+      break
+      }
+    if (abs(p_old[1]) > 3 |abs(p_old[2] >3)) {
+      print("Exceed the Given Range")
+      break
+      }
     # load the gradient
     gradient_ <- grad_f(p_old[1], p_old[2])
     # normalize the the gradient vector
@@ -305,23 +312,23 @@ gradient_d <- function(f_original, # the original function
     p_old <- p_new
     i <- i + 1
   }
-  p_old
+  print(paste0("The minimum point is around ", 
+               round(p_old[1],4)," ",
+               round(p_old[2],4)," ",
+               round(f_origin(p_old[1],p_old[2]),4)))
 }
 ```
-Then, try this gradient descent method on the given function.
-
+Then, try this gradient descent method on the given function.  
 ```{r}
-gradient_d(f_origin, grad_f, c(1,1))
-knitr::knit_exit()
-```
-
-
+gradient_d(f_origin, grad_f, c(1,2))
+```  
+For text space concern, I choose to print the iteration information at each 10 rounds.The final result shows that the minimum point is around (-1.5549, 1.6273, -10.8211), which is close to the observed possible minimum point (-2.1, 1.8, -11) (in my response to Question 6).
 
 ## Q9:
 *Write a function to implement gradient ascent with arguments for the start point, the number of iterations, the step size alpha...*   
 
 **MY SOLUTION:**   
-
+If one wants to make the steepest descent, they can adjust the learning rate(step size). But one caveat is, a big step size will cause the point oscillating around the minimum point and possible never reaching the target. So, a dynamic learning rate is necessary, That is, the learning rate can adaptively change itself from big size at the beginning to small when closing to the target.
 
 
 
