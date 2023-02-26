@@ -141,7 +141,8 @@ function to get the derivative quickly.
 \subsection{Q2:}\label{q2}}
 
 \emph{Create a plot of f and f on {[}0,4{]} in different colors and line
-types and add a legend.} \textbf{MY SOLUTION:}
+types and add a legend.}\\
+\textbf{MY SOLUTION:}
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -162,7 +163,7 @@ types and add a legend.} \textbf{MY SOLUTION:}
 \ErrorTok{\textgreater{}} \FunctionTok{lines}\NormalTok{(x, }\FunctionTok{f\_prime}\NormalTok{(x), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{, }\AttributeTok{type =} \StringTok{"l"}\NormalTok{)}
 \SpecialCharTok{\textgreater{}} \CommentTok{\# add the legend}
 \ErrorTok{\textgreater{}} \FunctionTok{legend}\NormalTok{(}\DecValTok{3}\NormalTok{,}\DecValTok{1}\NormalTok{, }\AttributeTok{inset =} \FloatTok{0.1}\NormalTok{, }\FunctionTok{c}\NormalTok{(}\StringTok{"f\_"}\NormalTok{,}\StringTok{"f\_prime"}\NormalTok{), }\AttributeTok{lty =} \DecValTok{1}\NormalTok{, }
-\SpecialCharTok{+}        \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\AttributeTok{title=}\StringTok{"line Type"}\NormalTok{)}
+\SpecialCharTok{+}        \AttributeTok{col =} \FunctionTok{c}\NormalTok{(}\StringTok{"blue"}\NormalTok{,}\StringTok{"red"}\NormalTok{), }\AttributeTok{title=}\StringTok{"Line Type"}\NormalTok{)}
 \SpecialCharTok{\textgreater{}} \CommentTok{\# add a horizontal line to indicate the y=0}
 \ErrorTok{\textgreater{}} \FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\DecValTok{0}\NormalTok{,}\AttributeTok{lty=}\DecValTok{3}\NormalTok{)}
 \SpecialCharTok{\textgreater{}} \FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\FloatTok{0.3683525}\NormalTok{,}\AttributeTok{lty=}\DecValTok{3}\NormalTok{)}
@@ -182,8 +183,11 @@ types and add a legend.} \textbf{MY SOLUTION:}
 univariate optimization for the golden section search, the bisection
 method, and Newton's method.}
 
-\textbf{MY SOLUTION:}\\
-\#\#\# 3.1 The Golden Section Search
+\textbf{MY SOLUTION:}
+
+\hypertarget{the-golden-section-search}{%
+\subsubsection{3.1 The Golden Section
+Search}\label{the-golden-section-search}}
 
 \begin{Shaded}
 \begin{Highlighting}[]

@@ -41,7 +41,7 @@ f_prime_neg <- function(x){
 ```  
 
 ## Q2:
-*Create a plot of f and f on [0,4] in different colors and line types and add a legend.* 
+*Create a plot of f and f on [0,4] in different colors and line types and add a legend.*  
 **MY SOLUTION:**  
 ```{r}
 # write the original function with the name of f_
@@ -61,7 +61,7 @@ plot(x, f_(x), col="blue", type = "l", ylim = c(-1.5,1))
 lines(x, f_prime(x), col="red", type = "l")
 # add the legend
 legend(3,1, inset = 0.1, c("f_","f_prime"), lty = 1, 
-       col = c("blue","red"), title="line Type")
+       col = c("blue","red"), title="Line Type")
 # add a horizontal line to indicate the y=0
 abline(h=0,lty=3)
 abline(v=0.3683525,lty=3)
@@ -75,6 +75,7 @@ mtext("Figure 1. The Lines of the Given Function and it's First Derivative",
 *Finish the functions that I started in the R code notes for univariate optimization for the golden section search, the bisection method, and Newton’s method.*   
 
 **MY SOLUTION:**  
+
 ### 3.1 The Golden Section Search  
 ```{r}
 golden <- function(f, int, precision = 1e-6)
