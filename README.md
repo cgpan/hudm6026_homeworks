@@ -22,5 +22,5 @@ Version 1.0 finished by Lei Sen and Chenguang Pan at 02.17.2023.
 Version 1.0 did not figure out how to use `BinNorm` to generate the unattenuated data;
 
 ## Homework_05 solutions  
-Version 1.1 finished by Lei Sen and Chenguang Pan at 02.26.2023.
+Version 1.1 finished by Chenguang Pan and Sen Lei at 02.26.2023.
 Version 1.1 does not solve the bonous part.
