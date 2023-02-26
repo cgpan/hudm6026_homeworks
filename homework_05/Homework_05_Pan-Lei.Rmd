@@ -315,7 +315,7 @@ gradient_d <- function(f_original, # the original function
   print(paste0("The minimum point is around ", 
                round(p_old[1],4)," ",
                round(p_old[2],4)," ",
-               round(f_origin(p_old[1],p_old[2]),4)))
+               round(f_original(p_old[1],p_old[2]),4)))
 }
 ```
 Then, try this gradient descent method on the given function.  
