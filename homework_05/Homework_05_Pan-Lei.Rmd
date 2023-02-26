@@ -325,7 +325,7 @@ gradient_d(f_origin, grad_f, c(1,2))
 For text space concern, I choose to print the iteration information at each 10 rounds.The final result shows that the minimum point is around (-1.5549, 1.6273, -10.8211), which is close to the observed possible minimum point (-2.1, 1.8, -11) (in my response to Question 6).
 
 ## Q9:
-*Write a function to implement gradient ascent with arguments for the start point, the number of iterations, the step size alpha...*   
+*Discuss what changes would need to be made to the gradient ascent function to im- plement steepest ascent. You do not need to actually implement steepest ascent here but you can do so for bonus points.*   
 
 **MY SOLUTION:**   
 If one wants to make the steepest descent, they can adjust the learning rate(step size). But one caveat is, a big step size will cause the point oscillating around the minimum point and possible never reaching the target. So, a dynamic learning rate is necessary, That is, the learning rate can adaptively change itself from big size at the beginning to small when closing to the target.
