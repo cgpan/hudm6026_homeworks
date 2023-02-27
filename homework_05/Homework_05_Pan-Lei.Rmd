@@ -330,7 +330,7 @@ For text space concern, I choose to print the iteration information at each 10 r
 *Discuss what changes would need to be made to the gradient ascent function to im- plement steepest ascent. You do not need to actually implement steepest ascent here but you can do so for bonus points.*   
 
 **MY SOLUTION:**   
-To find the steepest "step" for updating, we need to introduce the adaptive learning rate $\alpha$. I write some my intuitive understanding here. Since space over 3 dimensions is hard to imagine, I take the 3-d space for discussion with the function of $f(x_1,x_2)$. In this space, any pair of $x_1, x_2$ can construct a plane at the height of $f(x_1,x_2)$. To find the best learning rate at the point $x_1, x_2$ is to find the best direction that minimized the $f(x_1',x_2')-f(x_1,x_2)$. Why minimized? At vertical direction, the steepest direction occurs at the orthogonal distance between two planes. In other words, the orthogonal distance is the minimum value of $f(x_k-\alpha*\nabla f(x_k))$, like discussed in Prof. Keller's in-class notes. Based on thie principle, I refer to the code that Prof. Keller provided in the notes. Here, I have the following syntax. Note, I **insist** to use the non-normalized gradient directly to avoid the oscillation (non-convergence), as discussed in my response to Q8. 
+To find the steepest "step" for updating, we need to introduce the adaptive learning rate $\alpha$. I write my intuitive understanding here. Since space over 3 dimensions is hard to imagine, I take the 3-d space for discussion with the function of $f(x_1,x_2)$. In this space, any pair of $x_1, x_2$ can construct a plane at the height of $f(x_1,x_2)$. To find the best learning rate at the point $x_1, x_2$ is to find the best direction that minimizes the $f(x_1',x_2')-f(x_1,x_2)$. Why minimizes? At vertical direction, the steepest direction occurs at the orthogonal distance between two planes. In other words, the orthogonal distance is the minimum value of $f(x_k-\alpha*\nabla f(x_k))$, like discussed in Prof. Keller's in-class notes. Based on this principle, I refer to and fine-tune the code that Prof. Keller provided in the notes. Note, I **insist** to use the non-normalized gradient directly to avoid the oscillation (non-convergence), as discussed in my response to Q8. 
 
 Finally, the iteration time for the steepest descent method is 8, much less than the previous method with 18 iterations.
 ```{r}
@@ -363,13 +363,12 @@ gradient_dynamic <-
     gradient_ <- grad_f(p_old[1], p_old[2])
     # As discussed above, I choose to not use the normalized gradient here
     # gradient_norm <- gradient_/sqrt(gradient_%*%gradient_)
-    # update the point coordination with gradient * learning rate
-    
     # -----------------Add the steepest descent---------------------
     if(minimize) { f_min <- function(alpha) { 
       p_temp <- p_old - alpha*gradient_
       f_original(p_temp[1], p_temp[2]) } 
       alpha <- optimize(f_min, interval = c(0, 1), maximum = FALSE)$minimum 
+      # update the point coordination with gradient * learning rate
       p_new <- p_old - alpha*gradient_}
     if(!minimize) { f_max <- function(alpha) { 
       p_temp <- p_old - alpha*gradient_

@@ -586,21 +586,20 @@ implement steepest ascent here but you can do so for bonus points.}
 
 \textbf{MY SOLUTION:}\\
 To find the steepest ``step'' for updating, we need to introduce the
-adaptive learning rate \(\alpha\). I write some my intuitive
-understanding here. Since space over 3 dimensions is hard to imagine, I
-take the 3-d space for discussion with the function of \(f(x_1,x_2)\).
-In this space, any pair of \(x_1, x_2\) can construct a plane at the
-height of \(f(x_1,x_2)\). To find the best learning rate at the point
-\(x_1, x_2\) is to find the best direction that minimized the
-\(f(x_1',x_2')-f(x_1,x_2)\). Why minimized? At vertical direction, the
+adaptive learning rate \(\alpha\). I write my intuitive understanding
+here. Since space over 3 dimensions is hard to imagine, I take the 3-d
+space for discussion with the function of \(f(x_1,x_2)\). In this space,
+any pair of \(x_1, x_2\) can construct a plane at the height of
+\(f(x_1,x_2)\). To find the best learning rate at the point \(x_1, x_2\)
+is to find the best direction that minimizes the
+\(f(x_1',x_2')-f(x_1,x_2)\). Why minimizes? At vertical direction, the
 steepest direction occurs at the orthogonal distance between two planes.
 In other words, the orthogonal distance is the minimum value of
 \(f(x_k-\alpha*\nabla f(x_k))\), like discussed in Prof.~Keller's
-in-class notes. Based on thie principle, I refer to the code that
-Prof.~Keller provided in the notes. Here, I have the following syntax.
-Note, I \textbf{insist} to use the non-normalized gradient directly to
-avoid the oscillation (non-convergence), as discussed in my response to
-Q8.
+in-class notes. Based on this principle, I refer to and fine-tune the
+code that Prof.~Keller provided in the notes. Note, I \textbf{insist} to
+use the non-normalized gradient directly to avoid the oscillation
+(non-convergence), as discussed in my response to Q8.
 
 Finally, the iteration time for the steepest descent method is 8, much
 less than the previous method with 18 iterations.
@@ -636,13 +635,12 @@ less than the previous method with 18 iterations.
 \SpecialCharTok{+}\NormalTok{     gradient\_ }\OtherTok{\textless{}{-}} \FunctionTok{grad\_f}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{], p\_old[}\DecValTok{2}\NormalTok{])}
 \SpecialCharTok{+}     \CommentTok{\# As discussed above, I choose to not use the normalized gradient here}
 \SpecialCharTok{+}     \CommentTok{\# gradient\_norm \textless{}{-} gradient\_/sqrt(gradient\_\%*\%gradient\_)}
-\SpecialCharTok{+}     \CommentTok{\# update the point coordination with gradient * learning rate}
-\SpecialCharTok{+}     
 \SpecialCharTok{+}     \CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}Add the steepest descent{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
 \SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{(minimize) \{ f\_min }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(alpha) \{ }
 \SpecialCharTok{+}\NormalTok{       p\_temp }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_}
 \SpecialCharTok{+}       \FunctionTok{f\_original}\NormalTok{(p\_temp[}\DecValTok{1}\NormalTok{], p\_temp[}\DecValTok{2}\NormalTok{]) \} }
 \SpecialCharTok{+}\NormalTok{       alpha }\OtherTok{\textless{}{-}} \FunctionTok{optimize}\NormalTok{(f\_min, }\AttributeTok{interval =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{maximum =} \ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{$}\NormalTok{minimum }
+\SpecialCharTok{+}       \CommentTok{\# update the point coordination with gradient * learning rate}
 \SpecialCharTok{+}\NormalTok{       p\_new }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_\}}
 \SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\NormalTok{minimize) \{ f\_max }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(alpha) \{ }
 \SpecialCharTok{+}\NormalTok{       p\_temp }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_}
