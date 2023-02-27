@@ -585,11 +585,101 @@ function to im- plement steepest ascent. You do not need to actually
 implement steepest ascent here but you can do so for bonus points.}
 
 \textbf{MY SOLUTION:}\\
-If one wants to make the steepest descent, they can adjust the learning
-rate(step size). But one caveat is, a big step size will cause the point
-oscillating around the minimum point and possibly never reaching the
-target. So, a dynamic learning rate is necessary. That is, the learning
-rate can adaptively change itself from big size at the beginning to
-small when closing to the target.
+To find the steepest ``step'' for updating, we need to introduce the
+adaptive learning rate \(\alpha\). I write some my intuitive
+understanding here. Since space over 3 dimensions is hard to imagine, I
+take the 3-d space for discussion with the function of \(f(x_1,x_2)\).
+In this space, any pair of \(x_1, x_2\) can construct a plane at the
+height of \(f(x_1,x_2)\). To find the best learning rate at the point
+\(x_1, x_2\) is to find the best direction that minimized the
+\(f(x_1',x_2')-f(x_1,x_2)\). Why minimized? At vertical direction, the
+steepest direction occurs at the orthogonal distance between two planes.
+In other words, the orthogonal distance is the minimum value of
+\(f(x_k-\alpha*\nabla f(x_k))\), like discussed in Prof.~Keller's
+in-class notes. Based on thie principle, I refer to the code that
+Prof.~Keller provided in the notes. Here, I have the following syntax.
+Note, I \textbf{insist} to use the non-normalized gradient directly to
+avoid the oscillation (non-convergence), as discussed in my response to
+Q8.
+
+Finally, the iteration time for the steepest descent method is 8, much
+less than the previous method with 18 iterations.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ gradient\_dynamic }\OtherTok{\textless{}{-}} 
+\SpecialCharTok{+}   \ControlFlowTok{function}\NormalTok{(f\_original, }\CommentTok{\# the original function}
+\SpecialCharTok{+}\NormalTok{           grad\_f, }\CommentTok{\# the gradient function}
+\SpecialCharTok{+}\NormalTok{           start\_point, }\CommentTok{\# the start point, a vector}
+\SpecialCharTok{+}           \AttributeTok{max\_iter=}\DecValTok{500}\NormalTok{, }\CommentTok{\# the maximum number of iteration}
+\SpecialCharTok{+}           \AttributeTok{alpha=}\FloatTok{0.03}\NormalTok{, }\CommentTok{\# learning rate/ step size}
+\SpecialCharTok{+}           \AttributeTok{epsilon=}\FloatTok{1e{-}5}\NormalTok{, }\CommentTok{\# stopping criterion}
+\SpecialCharTok{+}           \AttributeTok{minimize=}\ConstantTok{TRUE}
+\SpecialCharTok{+}\NormalTok{ )\{}
+\SpecialCharTok{+}   \CommentTok{\# initial settings}
+\SpecialCharTok{+}\NormalTok{   p\_old }\OtherTok{\textless{}{-}}\NormalTok{ start\_point;i }\OtherTok{\textless{}{-}} \DecValTok{1}\NormalTok{;check }\OtherTok{\textless{}{-}} \DecValTok{1}
+\SpecialCharTok{+}   \ControlFlowTok{while}\NormalTok{ (check }\SpecialCharTok{\textgreater{}}\NormalTok{ epsilon) \{}
+\SpecialCharTok{+}     \CommentTok{\# print the iteration information at each 10 rounds}
+\SpecialCharTok{+}     \CommentTok{\# if (i ==1 | i\%\%5 == 0)\{}
+\SpecialCharTok{+}     \CommentTok{\#  print(paste0("Iter ", i, "; f(x\_1, x\_2)= ", f\_original(p\_old[1], p\_old[2])))\}}
+\SpecialCharTok{+}     \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"Iter "}\NormalTok{, i, }\StringTok{"; f(x\_1, x\_2)= "}\NormalTok{, }\FunctionTok{f\_original}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{], p\_old[}\DecValTok{2}\NormalTok{])))}
+\SpecialCharTok{+}     \CommentTok{\# Stop condition and warning}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (i }\SpecialCharTok{\textgreater{}}\NormalTok{ max\_iter) \{}
+\SpecialCharTok{+}       \FunctionTok{print}\NormalTok{(}\StringTok{"Exceed maximum number of iterations"}\NormalTok{)}
+\SpecialCharTok{+}       \ControlFlowTok{break}
+\SpecialCharTok{+}\NormalTok{     \}}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{ (}\FunctionTok{abs}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{]) }\SpecialCharTok{\textgreater{}} \DecValTok{3} \SpecialCharTok{|}\FunctionTok{abs}\NormalTok{(p\_old[}\DecValTok{2}\NormalTok{] }\SpecialCharTok{\textgreater{}}\DecValTok{3}\NormalTok{)) \{}
+\SpecialCharTok{+}       \FunctionTok{print}\NormalTok{(}\StringTok{"Exceed the Given Range"}\NormalTok{)}
+\SpecialCharTok{+}       \ControlFlowTok{break}
+\SpecialCharTok{+}\NormalTok{     \}}
+\SpecialCharTok{+}     \CommentTok{\# load the gradient}
+\SpecialCharTok{+}\NormalTok{     gradient\_ }\OtherTok{\textless{}{-}} \FunctionTok{grad\_f}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{], p\_old[}\DecValTok{2}\NormalTok{])}
+\SpecialCharTok{+}     \CommentTok{\# As discussed above, I choose to not use the normalized gradient here}
+\SpecialCharTok{+}     \CommentTok{\# gradient\_norm \textless{}{-} gradient\_/sqrt(gradient\_\%*\%gradient\_)}
+\SpecialCharTok{+}     \CommentTok{\# update the point coordination with gradient * learning rate}
+\SpecialCharTok{+}     
+\SpecialCharTok{+}     \CommentTok{\# {-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}Add the steepest descent{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}{-}}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{(minimize) \{ f\_min }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(alpha) \{ }
+\SpecialCharTok{+}\NormalTok{       p\_temp }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_}
+\SpecialCharTok{+}       \FunctionTok{f\_original}\NormalTok{(p\_temp[}\DecValTok{1}\NormalTok{], p\_temp[}\DecValTok{2}\NormalTok{]) \} }
+\SpecialCharTok{+}\NormalTok{       alpha }\OtherTok{\textless{}{-}} \FunctionTok{optimize}\NormalTok{(f\_min, }\AttributeTok{interval =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{maximum =} \ConstantTok{FALSE}\NormalTok{)}\SpecialCharTok{$}\NormalTok{minimum }
+\SpecialCharTok{+}\NormalTok{       p\_new }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_\}}
+\SpecialCharTok{+}     \ControlFlowTok{if}\NormalTok{(}\SpecialCharTok{!}\NormalTok{minimize) \{ f\_max }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(alpha) \{ }
+\SpecialCharTok{+}\NormalTok{       p\_temp }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_}
+\SpecialCharTok{+}       \FunctionTok{f\_original}\NormalTok{(p\_temp[}\DecValTok{1}\NormalTok{], p\_temp[}\DecValTok{2}\NormalTok{]) \} }
+\SpecialCharTok{+}\NormalTok{       alpha }\OtherTok{\textless{}{-}} \FunctionTok{optimize}\NormalTok{(f\_max, }\AttributeTok{interval =} \FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{), }\AttributeTok{maximum =} \ConstantTok{TRUE}\NormalTok{)}\SpecialCharTok{$}\NormalTok{maximum }
+\SpecialCharTok{+}\NormalTok{       p\_new }\OtherTok{\textless{}{-}}\NormalTok{ p\_old }\SpecialCharTok{{-}}\NormalTok{ alpha}\SpecialCharTok{*}\NormalTok{gradient\_\}}
+\SpecialCharTok{+}     \CommentTok{\# check the updating rate of p\_new, if less than epsilong, stop}
+\SpecialCharTok{+}\NormalTok{     check }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{((p\_new}\SpecialCharTok{{-}}\NormalTok{p\_old)}\SpecialCharTok{\%*\%}\NormalTok{(p\_new}\SpecialCharTok{{-}}\NormalTok{p\_old))}\SpecialCharTok{/} \FunctionTok{sqrt}\NormalTok{(p\_old }\SpecialCharTok{\%*\%}\NormalTok{ p\_old)}
+\SpecialCharTok{+}     \CommentTok{\# redefine the old point to send for next updating }
+\SpecialCharTok{+}\NormalTok{     p\_old }\OtherTok{\textless{}{-}}\NormalTok{ p\_new}
+\SpecialCharTok{+}\NormalTok{     i }\OtherTok{\textless{}{-}}\NormalTok{ i }\SpecialCharTok{+} \DecValTok{1}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}   \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"The minimum point is around "}\NormalTok{, }
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{],}\DecValTok{4}\NormalTok{),}\StringTok{" "}\NormalTok{,}
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(p\_old[}\DecValTok{2}\NormalTok{],}\DecValTok{4}\NormalTok{),}\StringTok{" "}\NormalTok{,}
+\SpecialCharTok{+}                \FunctionTok{round}\NormalTok{(}\FunctionTok{f\_original}\NormalTok{(p\_old[}\DecValTok{1}\NormalTok{],p\_old[}\DecValTok{2}\NormalTok{]),}\DecValTok{4}\NormalTok{)))}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \FunctionTok{gradient\_dynamic}\NormalTok{(f\_origin, grad\_f, }\FunctionTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{2}\NormalTok{),}\AttributeTok{minimize =}\NormalTok{ T)}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 1; f(x\_1, x\_2)= 15"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 2; f(x\_1, x\_2)= 8.63699144697386"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 3; f(x\_1, x\_2)= 4.33384987750813"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 4; f(x\_1, x\_2)= {-}2.3058502980118"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 5; f(x\_1, x\_2)= {-}10.6316001267316"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 6; f(x\_1, x\_2)= {-}10.8270249705974"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 7; f(x\_1, x\_2)= {-}10.8270290033752"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"Iter 8; f(x\_1, x\_2)= {-}10.8270290126678"}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"The minimum point is around {-}1.5711 1.6143 {-}10.827"}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{reference}{%
+\subsection{Reference}\label{reference}}
+
+This homework is finished by Chenguang Pan and Seng Lei with enthusiasm
+for statistical learning methods. We refer to Prof.~Keller's in-class
+note and the text book. No AI assistance is used at all. Thank you for
+your time.
 
 \end{document}

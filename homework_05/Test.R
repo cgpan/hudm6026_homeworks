@@ -25,17 +25,18 @@ f_origin(p_new[1], p_new[2])
 gradient_d <- function(f_original, # the original function
                        grad_f, # the gradient function
                        start_point, # the start point, a vector
-                       max_iter=100, # the maximum number of iteration
+                       max_iter=500, # the maximum number of iteration
                        alpha=0.03, # learning rate/ step size
-                       epsilon=1e-5 # stopping criterion
+                       epsilon=1e-5, # stopping criterion
+                       minimize=TRUE
 ){
   # initial settings
   p_old <- start_point;i <- 1;check <- 1
   while (check > epsilon) {
     # print the iteration information at each 10 rounds
-    if (i ==1 | i%%10 == 0){
-      print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
-    }
+    # if (i ==1 | i%%5 == 0){
+    #  print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))}
+    print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
     # Stop condition and warning
     if (i > max_iter) {
       print("Exceed maximum number of iterations")
@@ -47,10 +48,21 @@ gradient_d <- function(f_original, # the original function
     }
     # load the gradient
     gradient_ <- grad_f(p_old[1], p_old[2])
-    # normalize the the gradient vector
-    gradient_norm <- gradient_/sqrt(gradient_%*%gradient_)
+    # As discussed above, I choose to not use the normalized gradient here
+    # gradient_norm <- gradient_/sqrt(gradient_%*%gradient_)
     # update the point coordination with gradient * learning rate
-    p_new <- p_old - alpha*gradient_norm
+    
+    # -----------------Add the steepest descent---------------------
+    if(minimize) { f_min <- function(alpha) { 
+      p_temp <- p_old - alpha*gradient_
+      f_original(p_temp[1], p_temp[2]) } 
+      alpha <- optimize(f_min, interval = c(0, 1), maximum = FALSE)$minimum 
+      p_new <- p_old - alpha*gradient_}
+    if(!minimize) { f_max <- function(alpha) { 
+      p_temp <- p_old - alpha*gradient_
+      f_original(p_temp[1], p_temp[2]) } 
+      alpha <- optimize(f_max, interval = c(0, 1), maximum = TRUE)$maximum 
+      p_new <- p_old - alpha*gradient_}
     # check the updating rate of p_new, if less than epsilong, stop
     check <- sqrt((p_new-p_old)%*%(p_new-p_old))/ sqrt(p_old %*% p_old)
     # redefine the old point to send for next updating 
@@ -60,9 +72,7 @@ gradient_d <- function(f_original, # the original function
   print(paste0("The minimum point is around ", 
                round(p_old[1],4)," ",
                round(p_old[2],4)," ",
-               round(f_origin(p_old[1],p_old[2]),4)))
+               round(f_original(p_old[1],p_old[2]),4)))
 }
 
-gradient_d(f_origin, grad_f, c(1,2))
-
-20%%10
+gradient_d(f_origin, grad_f, c(1,2),minimize = T)
