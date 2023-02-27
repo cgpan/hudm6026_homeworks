@@ -24,3 +24,5 @@ Version 1.0 did not figure out how to use `BinNorm` to generate the unattenuated
 ## Homework_05 solutions  
 Version 1.1 finished by Chenguang Pan and Sen Lei at 02.26.2023.
 Version 1.1 does not solve the bonous part.
+Version 2.0 adds the bonous part of the last question, i.e., the steepest descent method. 
+Version 2.1 revise the minor typos and add the discussion about the why I choose not to normalize the gradient.
