@@ -277,6 +277,7 @@ grad_f <- function(x_1, x_2){c(dfdx_1(x_1,x_2), dfdx_2(x_1,x_2))}
 *Write a function to implement gradient ascent with arguments for the start point, the number of iterations, the step size alpha...*   
 
 **MY SOLUTION:**   
+Here, we need to discuss about the necessity of normalized gradient. Intuitively, if each time we normalize the gradient, the length of "step size" for updating is fixed. That is, the value of $Learning\_Rate*Gradient's\_Unit\_Vector$. Apparently, it is a fixed rather than dynamic value to update the $x_1$ and $x_2$ coordination. Therefore, one can easily see the final steps will always oscillate around the target point and the stop criterion might never be reached! I choose to skip the `normalize` step, and use the $Learning\_Rate*Gradient$ directly as a dynamic updating value to avoid the oscillation. That is, the closer to the target point, the smaller the step size.
 ```{r}
 gradient_d <- function(f_original, # the original function
                        grad_f, # the gradient function
@@ -289,9 +290,9 @@ gradient_d <- function(f_original, # the original function
   p_old <- start_point;i <- 1;check <- 1
   while (check > epsilon) {
     # print the iteration information at each 10 rounds
-    if (i ==1 | i%%10 == 0){
-     print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
-    }
+    # if (i ==1 | i%%5 == 0){
+    #  print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))}
+    print(paste0("Iter ", i, "; f(x_1, x_2)= ", f_original(p_old[1], p_old[2])))
     # Stop condition and warning
     if (i > max_iter) {
       print("Exceed maximum number of iterations")
@@ -303,10 +304,10 @@ gradient_d <- function(f_original, # the original function
       }
     # load the gradient
     gradient_ <- grad_f(p_old[1], p_old[2])
-    # normalize the the gradient vector
-    gradient_norm <- gradient_/sqrt(gradient_%*%gradient_)
+    # As discussed above, I choose to not use the normalized gradient here
+    # gradient_norm <- gradient_/sqrt(gradient_%*%gradient_)
     # update the point coordination with gradient * learning rate
-    p_new <- p_old - alpha*gradient_norm
+    p_new <- p_old - alpha*gradient_
     # check the updating rate of p_new, if less than epsilong, stop
     check <- sqrt((p_new-p_old)%*%(p_new-p_old))/ sqrt(p_old %*% p_old)
     # redefine the old point to send for next updating 
@@ -323,13 +324,13 @@ Then, try this gradient descent method on the given function.
 ```{r}
 gradient_d(f_origin, grad_f, c(1,2))
 ```  
-For text space concern, I choose to print the iteration information at each 10 rounds.The final result shows that the minimum point is around (-1.5549, 1.6273, -10.8211), which is close to the observed possible minimum point (-2.1, 1.8, -11) (in my response to Question 6).
+For text space concern, I choose to print the iteration information at each 10 rounds.The final result shows that the minimum point is around (-1.5711, 1.6143, -10.827), which is close to the observed possible minimum point (-2.1, 1.8, -11) (in my response to Question 6).
 
 ## Q9:
 *Discuss what changes would need to be made to the gradient ascent function to im- plement steepest ascent. You do not need to actually implement steepest ascent here but you can do so for bonus points.*   
 
 **MY SOLUTION:**   
-If one wants to make the steepest descent, they can adjust the learning rate(step size). But one caveat is, a big step size will cause the point oscillating around the minimum point and possible never reaching the target. So, a dynamic learning rate is necessary, That is, the learning rate can adaptively change itself from big size at the beginning to small when closing to the target.
+If one wants to make the steepest descent, they can adjust the learning rate(step size). But one caveat is, a big step size will cause the point oscillating around the minimum point and possibly never reaching the target. So, a dynamic learning rate is necessary. That is, the learning rate can adaptively change itself from big size at the beginning to small when closing to the target.
 
 
 
