@@ -1,0 +1,28 @@
+---
+title: "HUDM6026 Homework_07"
+author: Chenguang Pan
+date: Mar 17, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 5
+    number_sections: false
+    keep_tex: true
+    highlight: tang
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```   
+
+## Q1:
+*Do some research on the two-sample Kolmogorov-Smirnov (K-S) test for equality of distributions. Describe the null and alternative hypotheses and discuss how the test statistic is computed*  
+
+**MY SOLUTION:**  
