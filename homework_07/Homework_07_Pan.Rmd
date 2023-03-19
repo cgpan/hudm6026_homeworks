@@ -40,5 +40,45 @@ The maximum distance (i.e., the $D$) between the two CDFs is then compared to a 
 
 
 
-If the test statistic is greater than the critical value, the null hypothesis is rejected, indicating that the two sets of data are not drawn from the same population.
+If the test statistic is greater than the critical value, the null hypothesis is rejected, indicating that the two sets of data are not drawn from the same population.  
+
+## Q2:
+*Install package MatchIt and load it. Then call data(lalonde). Examine the help on lalonde and describe the meaning of the treat and re78 variables.*  
+  
+  
+**MY SOLUTION:**  
+```{r, eval=FALSE}
+install.packages("MatchIt")
+```  
+```{r}
+# extract the basic information of the given dataset
+library(MatchIt)
+data(lalonde)
+head(lalonde)
+dim(lalonde)
+```  
+The help file shows that `lalonde` has one treated group from NSW with the size of 185 and one comparison group from PSID with the size of 429. The variable `treat` is the treatment assignment(1= treated, 0=control). The `re78` is income in 1978, in US dollars.  
+
+## Q3:
+*Run the two-sample K-S test to test if participant income in 1978 is identically distributed across treatment group assignment or not...*  
+  
+  
+**MY SOLUTION:**  
+
+```{r}
+# subset the treatment and control groups
+x <- lalonde$re78[lalonde$treat ==1]
+y <- lalonde$re78[lalonde$treat ==0]
+
+# run the two sample k-s test
+ks.test(x, y)
+```   
+The test statistic $D$ is .0986. Since the p-value is .162 and it is greater than the significant level .05, we fail to reject the null hypothesis. That is, there is no statistically significant difference between the treatment and comparison groups.  
+
+## Q4:
+*Create a function that takes two arguments, x and y, each a vector of values, and outputs the value of the two-sample K-S statistic D*  
+  
+  
+**MY SOLUTION:**   
+
 

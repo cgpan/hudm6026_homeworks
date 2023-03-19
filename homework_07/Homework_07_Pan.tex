@@ -34,6 +34,46 @@
 \makeatother
 \usepackage{xcolor}
 \usepackage[margin=1in]{geometry}
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
 \usepackage{graphicx}
 \makeatletter
 \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
@@ -115,5 +155,82 @@ and significance level chosen.
 If the test statistic is greater than the critical value, the null
 hypothesis is rejected, indicating that the two sets of data are not
 drawn from the same population.
+
+\hypertarget{q2}{%
+\subsection{Q2:}\label{q2}}
+
+\emph{Install package MatchIt and load it. Then call data(lalonde).
+Examine the help on lalonde and describe the meaning of the treat and
+re78 variables.}
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{install.packages}\NormalTok{(}\StringTok{"MatchIt"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# extract the basic information of the given dataset}
+\ErrorTok{\textgreater{}} \FunctionTok{library}\NormalTok{(MatchIt)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{data}\NormalTok{(lalonde)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{head}\NormalTok{(lalonde)}
+\NormalTok{     treat age educ   race married nodegree re74 re75       re78}
+\NormalTok{NSW1     }\DecValTok{1}  \DecValTok{37}   \DecValTok{11}\NormalTok{  black       }\DecValTok{1}        \DecValTok{1}    \DecValTok{0}    \DecValTok{0}  \FloatTok{9930.0460}
+\NormalTok{NSW2     }\DecValTok{1}  \DecValTok{22}    \DecValTok{9}\NormalTok{ hispan       }\DecValTok{0}        \DecValTok{1}    \DecValTok{0}    \DecValTok{0}  \FloatTok{3595.8940}
+\NormalTok{NSW3     }\DecValTok{1}  \DecValTok{30}   \DecValTok{12}\NormalTok{  black       }\DecValTok{0}        \DecValTok{0}    \DecValTok{0}    \DecValTok{0} \FloatTok{24909.4500}
+\NormalTok{NSW4     }\DecValTok{1}  \DecValTok{27}   \DecValTok{11}\NormalTok{  black       }\DecValTok{0}        \DecValTok{1}    \DecValTok{0}    \DecValTok{0}  \FloatTok{7506.1460}
+\NormalTok{NSW5     }\DecValTok{1}  \DecValTok{33}    \DecValTok{8}\NormalTok{  black       }\DecValTok{0}        \DecValTok{1}    \DecValTok{0}    \DecValTok{0}   \FloatTok{289.7899}
+\NormalTok{NSW6     }\DecValTok{1}  \DecValTok{22}    \DecValTok{9}\NormalTok{  black       }\DecValTok{0}        \DecValTok{1}    \DecValTok{0}    \DecValTok{0}  \FloatTok{4056.4940}
+\SpecialCharTok{\textgreater{}} \FunctionTok{dim}\NormalTok{(lalonde)}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\DecValTok{614}   \DecValTok{9}
+\end{Highlighting}
+\end{Shaded}
+
+The help file shows that \texttt{lalonde} has one treated group from NSW
+with the size of 185 and one comparison group from PSID with the size of
+429. The variable \texttt{treat} is the treatment assignment(1= treated,
+0=control). The \texttt{re78} is income in 1978, in US dollars.
+
+\hypertarget{q3}{%
+\subsection{Q3:}\label{q3}}
+
+\emph{Run the two-sample K-S test to test if participant income in 1978
+is identically distributed across treatment group assignment or
+not\ldots{}}
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# subset the treatment and control groups}
+\ErrorTok{\textgreater{}}\NormalTok{ x }\OtherTok{\textless{}{-}}\NormalTok{ lalonde}\SpecialCharTok{$}\NormalTok{re78[lalonde}\SpecialCharTok{$}\NormalTok{treat }\SpecialCharTok{==}\DecValTok{1}\NormalTok{]}
+\SpecialCharTok{\textgreater{}}\NormalTok{ y }\OtherTok{\textless{}{-}}\NormalTok{ lalonde}\SpecialCharTok{$}\NormalTok{re78[lalonde}\SpecialCharTok{$}\NormalTok{treat }\SpecialCharTok{==}\DecValTok{0}\NormalTok{]}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# run the two sample k{-}s test}
+\ErrorTok{\textgreater{}} \FunctionTok{ks.test}\NormalTok{(x, y)}
+
+\NormalTok{    Asymptotic two}\SpecialCharTok{{-}}\NormalTok{sample Kolmogorov}\SpecialCharTok{{-}}\NormalTok{Smirnov test}
+
+\NormalTok{data}\SpecialCharTok{:}\NormalTok{  x and y}
+\NormalTok{D }\OtherTok{=} \FloatTok{0.098608}\NormalTok{, p}\SpecialCharTok{{-}}\NormalTok{value }\OtherTok{=} \FloatTok{0.1619}
+\NormalTok{alternative hypothesis}\SpecialCharTok{:}\NormalTok{ two}\SpecialCharTok{{-}}\NormalTok{sided}
+\end{Highlighting}
+\end{Shaded}
+
+The test statistic \(D\) is .0986. Since the p-value is .162 and it is
+greater than the significant level .05, we fail to reject the null
+hypothesis. That is, there is no statistically significant difference
+between the treatment and comparison groups.
+
+\hypertarget{q4}{%
+\subsection{Q4:}\label{q4}}
+
+\emph{Create a function that takes two arguments, x and y, each a vector
+of values, and outputs the value of the two-sample K-S statistic D}
+
+\textbf{MY SOLUTION:}
 
 \end{document}
