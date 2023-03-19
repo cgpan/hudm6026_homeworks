@@ -233,4 +233,74 @@ of values, and outputs the value of the two-sample K-S statistic D}
 
 \textbf{MY SOLUTION:}
 
+There is a function \texttt{ecdf()} built in R. I plan to use it
+directly and won't write the \texttt{ecdf} function from the scratch.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ ks\_d }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(x, y)\{}
+\SpecialCharTok{+}   \CommentTok{\# get the maximize vertical distance between the two ecdfs}
+\SpecialCharTok{+}\NormalTok{   d }\OtherTok{\textless{}{-}} \FunctionTok{max}\NormalTok{(}\FunctionTok{abs}\NormalTok{(}\FunctionTok{ecdf}\NormalTok{(x)(x)}\SpecialCharTok{{-}}\FunctionTok{ecdf}\NormalTok{(y)(x)))}
+\SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(d)}
+\SpecialCharTok{+}\NormalTok{ \}}
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{q5}{%
+\subsection{Q5:}\label{q5}}
+
+\emph{Run an approximate permutation test with B = 1000 permutation
+replications to determine the estimated ASL for testing the null
+hypothesis that participant incomes are identically distributed across
+treatment arms. Use a = 0.05}
+
+\textbf{MY SOLUTION:}\\
+The sample sizes for treatment and control groups are 185 and 429.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{data}\NormalTok{(lalonde)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{set.seed}\NormalTok{(}\DecValTok{666}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# subset the treatment and control group}
+\ErrorTok{\textgreater{}}\NormalTok{ treat\_group }\OtherTok{\textless{}{-}}\NormalTok{ lalonde}\SpecialCharTok{$}\NormalTok{re78[lalonde}\SpecialCharTok{$}\NormalTok{treat }\SpecialCharTok{==}\DecValTok{1}\NormalTok{]}
+\SpecialCharTok{\textgreater{}}\NormalTok{ control\_group }\OtherTok{\textless{}{-}}\NormalTok{ lalonde}\SpecialCharTok{$}\NormalTok{re78[lalonde}\SpecialCharTok{$}\NormalTok{treat }\SpecialCharTok{==}\DecValTok{0}\NormalTok{]}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# get the observed the K{-}S test\textquotesingle{}s D}
+\ErrorTok{\textgreater{}}\NormalTok{ d\_observed }\OtherTok{\textless{}{-}} \FunctionTok{ks\_d}\NormalTok{(treat\_group, control\_group)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# get the sample sizes of treatment and control groups}
+\ErrorTok{\textgreater{}}\NormalTok{ size\_treat }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(treat\_group); size\_control }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(control\_group)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# define the repeating times}
+\ErrorTok{\textgreater{}}\NormalTok{ B }\OtherTok{\textless{}{-}} \DecValTok{1000}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# create a empty array to load the test statistic D from different permutations}
+\ErrorTok{\textgreater{}}\NormalTok{ d\_bigger }\OtherTok{\textless{}{-}} \DecValTok{0}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# randomly sample data from combined dataset in the sizes of 185 and 429}
+\ErrorTok{\textgreater{}} \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
+\SpecialCharTok{+}   \CommentTok{\# randomly sample data from the whole re78 data in the size of 185+429}
+\SpecialCharTok{+}\NormalTok{   dat }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(lalonde}\SpecialCharTok{$}\NormalTok{re78)}
+\SpecialCharTok{+}   \CommentTok{\# split the random sample into 185 and 429 sample sizes}
+\SpecialCharTok{+}\NormalTok{   x }\OtherTok{\textless{}{-}}\NormalTok{ dat[}\DecValTok{1}\SpecialCharTok{:}\NormalTok{ size\_treat]}
+\SpecialCharTok{+}\NormalTok{   y }\OtherTok{\textless{}{-}}\NormalTok{ dat[(size\_treat}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{ (size\_treat}\SpecialCharTok{+}\NormalTok{size\_control)]}
+\SpecialCharTok{+}   \CommentTok{\# plug the x and y into the D function above}
+\SpecialCharTok{+}\NormalTok{   d\_temp }\OtherTok{\textless{}{-}} \FunctionTok{ks\_d}\NormalTok{(x,y)}
+\SpecialCharTok{+}   \CommentTok{\# compare the d\_temp with the observed KS test\textquotesingle{}s D}
+\SpecialCharTok{+}   \ControlFlowTok{if}\NormalTok{ (d\_temp }\SpecialCharTok{\textgreater{}=}\NormalTok{ d\_observed)\{}
+\SpecialCharTok{+}\NormalTok{     d\_bigger }\OtherTok{\textless{}{-}}\NormalTok{ d\_bigger }\SpecialCharTok{+} \DecValTok{1}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# get the p value}
+\ErrorTok{\textgreater{}}\NormalTok{ p\_value }\OtherTok{\textless{}{-}} \FunctionTok{round}\NormalTok{(d\_bigger}\SpecialCharTok{/}\NormalTok{B,}\DecValTok{3}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ p\_value}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\FloatTok{0.116}
+\SpecialCharTok{\textgreater{}} \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"The Ds from permuated data are "}\NormalTok{, }
+\SpecialCharTok{+}\NormalTok{              d\_bigger, }
+\SpecialCharTok{+}              \StringTok{" times greater than the observed D "}\NormalTok{,}
+\SpecialCharTok{+}              \FunctionTok{round}\NormalTok{(d\_observed,}\DecValTok{3}\NormalTok{),}\StringTok{"."}\NormalTok{))}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"The Ds from permuated data are 116 times greater than the observed D 0.099."}
+\SpecialCharTok{\textgreater{}} \FunctionTok{print}\NormalTok{(}\FunctionTok{paste0}\NormalTok{(}\StringTok{"The P value is "}\NormalTok{, }
+\SpecialCharTok{+}\NormalTok{              p\_value, }\StringTok{"."}\NormalTok{))}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\StringTok{"The P value is 0.116."}
+\end{Highlighting}
+\end{Shaded}
+
+The result
+
 \end{document}

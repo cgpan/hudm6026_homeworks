@@ -78,7 +78,61 @@ The test statistic $D$ is .0986. Since the p-value is .162 and it is greater tha
 ## Q4:
 *Create a function that takes two arguments, x and y, each a vector of values, and outputs the value of the two-sample K-S statistic D*  
   
+**MY SOLUTION:**   
+
+There is a function `ecdf()` built in R. I plan to use it directly and won't write the `ecdf` function from the scratch.
+```{r}
+ks_d <- function(x, y){
+  # get the maximize vertical distance between the two ecdfs
+  d <- max(abs(ecdf(x)(x)-ecdf(y)(x)))
+  return(d)
+}
+```  
+
+## Q5:
+*Run an approximate permutation test with B = 1000 permutation replications to determine the estimated ASL for testing the null hypothesis that participant incomes are identically distributed across treatment arms. Use a = 0.05*  
   
 **MY SOLUTION:**   
+The sample sizes for treatment and control groups are 185 and 429.
+```{r}
+data(lalonde)
+set.seed(666)
+# subset the treatment and control group
+treat_group <- lalonde$re78[lalonde$treat ==1]
+control_group <- lalonde$re78[lalonde$treat ==0]
+# get the observed the K-S test's D
+d_observed <- ks_d(treat_group, control_group)
+# get the sample sizes of treatment and control groups
+size_treat <- length(treat_group); size_control <- length(control_group)
+# define the repeating times
+B <- 1000
+# create a empty array to load the test statistic D from different permutations
+d_bigger <- 0
+# randomly sample data from combined dataset in the sizes of 185 and 429
+for (i in 1:B) {
+  # randomly sample data from the whole re78 data in the size of 185+429
+  dat <- sample(lalonde$re78)
+  # split the random sample into 185 and 429 sample sizes
+  x <- dat[1: size_treat]
+  y <- dat[(size_treat+1): (size_treat+size_control)]
+  # plug the x and y into the D function above
+  d_temp <- ks_d(x,y)
+  # compare the d_temp with the observed KS test's D
+  if (d_temp >= d_observed){
+    d_bigger <- d_bigger + 1
+  }
+}
+# get the p value
+p_value <- round(d_bigger/B,3)
+p_value
+print(paste0("The Ds from permuated data are ", 
+             d_bigger, 
+             " times greater than the observed D ",
+             round(d_observed,3),"."))
+print(paste0("The P value is ", 
+             p_value, "."))
+```   
+The result shows that the p value (.116) is greater than .05. We fail to reject the null hypothesis.
+
 
 
