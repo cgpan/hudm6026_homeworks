@@ -271,8 +271,12 @@ The sample sizes for treatment and control groups are 185 and 429.
 \SpecialCharTok{\textgreater{}} \CommentTok{\# define the repeating times}
 \ErrorTok{\textgreater{}}\NormalTok{ B }\OtherTok{\textless{}{-}} \DecValTok{1000}
 \SpecialCharTok{\textgreater{}} \CommentTok{\# create a empty array to load the test statistic D from different permutations}
+\ErrorTok{\textgreater{}}\NormalTok{ ks\_ds }\OtherTok{\textless{}{-}} \FunctionTok{rep}\NormalTok{(}\ConstantTok{NA}\NormalTok{,B)}
+\SpecialCharTok{\textgreater{}} \CommentTok{\# creat a variable to count how many times the re{-}sampling Ds is greater than the }
+\ErrorTok{\textgreater{}} \CommentTok{\# observed one.}
 \ErrorTok{\textgreater{}}\NormalTok{ d\_bigger }\OtherTok{\textless{}{-}} \DecValTok{0}
-\SpecialCharTok{\textgreater{}} \CommentTok{\# randomly sample data from combined dataset in the sizes of 185 and 429}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \CommentTok{\# randomly sample data from combined dataset in the sizes of 185 and 429}
 \ErrorTok{\textgreater{}} \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\NormalTok{B) \{}
 \SpecialCharTok{+}   \CommentTok{\# randomly sample data from the whole re78 data in the size of 185+429}
 \SpecialCharTok{+}\NormalTok{   dat }\OtherTok{\textless{}{-}} \FunctionTok{sample}\NormalTok{(lalonde}\SpecialCharTok{$}\NormalTok{re78)}
@@ -281,6 +285,8 @@ The sample sizes for treatment and control groups are 185 and 429.
 \SpecialCharTok{+}\NormalTok{   y }\OtherTok{\textless{}{-}}\NormalTok{ dat[(size\_treat}\SpecialCharTok{+}\DecValTok{1}\NormalTok{)}\SpecialCharTok{:}\NormalTok{ (size\_treat}\SpecialCharTok{+}\NormalTok{size\_control)]}
 \SpecialCharTok{+}   \CommentTok{\# plug the x and y into the D function above}
 \SpecialCharTok{+}\NormalTok{   d\_temp }\OtherTok{\textless{}{-}} \FunctionTok{ks\_d}\NormalTok{(x,y)}
+\SpecialCharTok{+}   \CommentTok{\# write the d\_temp to the ks\_ds}
+\SpecialCharTok{+}\NormalTok{   ks\_ds[i] }\OtherTok{\textless{}{-}}\NormalTok{ d\_temp}
 \SpecialCharTok{+}   \CommentTok{\# compare the d\_temp with the observed KS test\textquotesingle{}s D}
 \SpecialCharTok{+}   \ControlFlowTok{if}\NormalTok{ (d\_temp }\SpecialCharTok{\textgreater{}=}\NormalTok{ d\_observed)\{}
 \SpecialCharTok{+}\NormalTok{     d\_bigger }\OtherTok{\textless{}{-}}\NormalTok{ d\_bigger }\SpecialCharTok{+} \DecValTok{1}
@@ -301,6 +307,28 @@ The sample sizes for treatment and control groups are 185 and 429.
 \end{Highlighting}
 \end{Shaded}
 
-The result
+The result shows that the re-sampling-based p value (.116) is greater
+than .05. We fail to reject the null hypothesis. This calculated p value
+is close to p value .162 obtained from theoretical null distribution in
+Question 3.
+
+\hypertarget{q6}{%
+\subsection{Q6:}\label{q6}}
+
+\emph{Plot a histogram of the permutation distribution created by
+applying the K-S statistic to the B = 1000 permutation replications.}
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{hist}\NormalTok{(ks\_ds, }\AttributeTok{breaks =}\DecValTok{100}\NormalTok{, }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.17}\NormalTok{), }
+\SpecialCharTok{+}      \AttributeTok{main=}\StringTok{"Figure 1. A histogram of the re{-}sampling{-}based test statistics"}\NormalTok{,}
+\SpecialCharTok{+}      \AttributeTok{xlab=}\StringTok{"Null Distribution of Test Statistic"}\NormalTok{, }\AttributeTok{col=}\DecValTok{7}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{.}\DecValTok{116}\NormalTok{, }\AttributeTok{col=}\DecValTok{4}\NormalTok{, }\AttributeTok{lwd =}\DecValTok{2}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{Homework_07_Pan_files/figure-latex/unnamed-chunk-6-1.pdf}
 
 \end{document}

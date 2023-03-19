@@ -107,7 +107,11 @@ size_treat <- length(treat_group); size_control <- length(control_group)
 # define the repeating times
 B <- 1000
 # create a empty array to load the test statistic D from different permutations
+ks_ds <- rep(NA,B)
+# creat a variable to count how many times the re-sampling Ds is greater than the 
+# observed one.
 d_bigger <- 0
+
 # randomly sample data from combined dataset in the sizes of 185 and 429
 for (i in 1:B) {
   # randomly sample data from the whole re78 data in the size of 185+429
@@ -117,6 +121,8 @@ for (i in 1:B) {
   y <- dat[(size_treat+1): (size_treat+size_control)]
   # plug the x and y into the D function above
   d_temp <- ks_d(x,y)
+  # write the d_temp to the ks_ds
+  ks_ds[i] <- d_temp
   # compare the d_temp with the observed KS test's D
   if (d_temp >= d_observed){
     d_bigger <- d_bigger + 1
@@ -132,7 +138,21 @@ print(paste0("The Ds from permuated data are ",
 print(paste0("The P value is ", 
              p_value, "."))
 ```   
-The result shows that the p value (.116) is greater than .05. We fail to reject the null hypothesis.
+The result shows that the re-sampling-based p value (.116) is greater than .05. We fail to reject the null hypothesis. This calculated p value is close to p value .162 obtained from theoretical null distribution in Question 3.  
+
+
+## Q6:
+*Plot a histogram of the permutation distribution created by applying the K-S statistic to the B = 1000 permutation replications.*  
+  
+**MY SOLUTION:**   
+```{r}
+hist(ks_ds, breaks =100, xlim=c(0,0.17), 
+     main="Figure 1. A histogram of the re-sampling-based test statistics",
+     xlab="Null Distribution of Test Statistic", col=7)
+```
+
+
+
 
 
 
