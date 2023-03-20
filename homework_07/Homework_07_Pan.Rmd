@@ -26,8 +26,10 @@ knitr::opts_chunk$set(
 *Do some research on the two-sample Kolmogorov-Smirnov (K-S) test for equality of distributions. Describe the null and alternative hypotheses and discuss how the test statistic is computed*  
   
   
-**MY SOLUTION:**  
+**MY SOLUTION:**    
 
+**[Part of my answer for this question refered to ChatGPT's responses, crosschecked with Wikipedia]**   
+   
 ### 1.1 Two sample K-S test's concept
 
 The two-sample Kolmogorov-Smirnov(K-S) test is a nonparametric test used to test whether two datasets are from the same population. K-S test works by comparing the cumulative distribution functions (CDF) of the two datasets.
@@ -151,6 +153,15 @@ hist(ks_ds, breaks =100, xlim=c(0,0.17),
      xlab="Null Distribution of Test Statistic", col=7)
 ```
 
+## Reference  
+
+Keller, B.(2023). *HUDM 6026 Computational Statistics: 07 Permutation Test*[Lecture notes].
+
+In Wikipedia.(2023). *Kolmogorov–Smirnov test.* https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
+
+Hastie, T., Tibshirani, R., & Friedman, J. (2009). *An introduction to statistical learning.*
+
+Rizzo, M. L. (2019). *Statistical computing with R.* Chapman and Hall/CRC.
 
 
 

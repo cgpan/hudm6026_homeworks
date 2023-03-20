@@ -119,6 +119,9 @@ hypotheses and discuss how the test statistic is computed}
 
 \textbf{MY SOLUTION:}
 
+\textbf{{[}Part of my answer for this question refered to ChatGPT's
+responses, crosschecked with Wikipedia{]}}
+
 \hypertarget{two-sample-k-s-tests-concept}{%
 \subsubsection{1.1 Two sample K-S test's
 concept}\label{two-sample-k-s-tests-concept}}
@@ -325,10 +328,24 @@ applying the K-S statistic to the B = 1000 permutation replications.}
 \SpecialCharTok{\textgreater{}} \FunctionTok{hist}\NormalTok{(ks\_ds, }\AttributeTok{breaks =}\DecValTok{100}\NormalTok{, }\AttributeTok{xlim=}\FunctionTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{,}\FloatTok{0.17}\NormalTok{), }
 \SpecialCharTok{+}      \AttributeTok{main=}\StringTok{"Figure 1. A histogram of the re{-}sampling{-}based test statistics"}\NormalTok{,}
 \SpecialCharTok{+}      \AttributeTok{xlab=}\StringTok{"Null Distribution of Test Statistic"}\NormalTok{, }\AttributeTok{col=}\DecValTok{7}\NormalTok{)}
-\SpecialCharTok{\textgreater{}} \FunctionTok{abline}\NormalTok{(}\AttributeTok{v=}\NormalTok{.}\DecValTok{116}\NormalTok{, }\AttributeTok{col=}\DecValTok{4}\NormalTok{, }\AttributeTok{lwd =}\DecValTok{2}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
 
 \includegraphics{Homework_07_Pan_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\hypertarget{reference}{%
+\subsection{Reference}\label{reference}}
+
+Keller, B.(2023). \emph{HUDM 6026 Computational Statistics: 07
+Permutation Test}{[}Lecture notes{]}.
+
+In Wikipedia.(2023). \emph{Kolmogorov--Smirnov test.}
+\url{https://en.wikipedia.org/wiki/Kolmogorov\%E2\%80\%93Smirnov_test}
+
+Hastie, T., Tibshirani, R., \& Friedman, J. (2009). \emph{An
+introduction to statistical learning.}
+
+Rizzo, M. L. (2019). \emph{Statistical computing with R.} Chapman and
+Hall/CRC.
 
 \end{document}
