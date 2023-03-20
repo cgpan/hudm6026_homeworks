@@ -1,6 +1,6 @@
 # RCT data from the National Supported Work Demonstration are
 # available from Dehejia's website here:
-# https://users.nber.org/~rdehejia/nswdata2.html
+https://users.nber.org/~rdehejia/nswdata2.html
 # See the website for descriptions of variables.
 
 # Download data from treated units:
@@ -104,6 +104,40 @@ length(which(boot_out$t > boot_out$t0))/1000
 # group. Note that the reference distribution is bimodal and
 # clearly not normal. 
 
+# Ok, so this last test allowed us to test for a difference
+# in kurtosis. But what if we believed that the treatment was
+# likely to cause a change that both the sample mean and the 
+# sample kurtosis should be sensitive to? Again, because of the
+# flexibility of the permutation framework, we could construct
+# a new statistic that combines the sample mean with the sample
+# kurtosis in some way, perhaps by taking a weighted sum.
+
+mean_kurt <- function(dat, ind) {
+  trt <- dat$treat # group assignments are fixed
+  re78 <- dat$re78[ind] # permute the outcome
+  k0 <- kurt(re78[which(trt == 0)])
+  k1 <- kurt(re78[which(trt == 1)])
+  k_diff<- k1 - k0
+  mn0 <- mean(re78[which(trt == 0)])
+  mn1 <- mean(re78[which(trt == 1)])
+  mn_diff <- mn1 - mn0
+  out <- .7*mn_diff + .3*k_diff
+}
+
+set.seed(8593)
+boot_out2 <- boot(data = lalonde, 
+                 statistic = mean_kurt, 
+                 R = 1000, sim = "permutation")
+
+# The statistics resulting from permutation are stored in 
+# the output in a 1000 x 1 matrix called t.
+hist(boot_out2$t, 50)
+
+# Calculate ASL (approximate significance level)
+length(which(boot_out2$t > boot_out2$t0))/1000
+
+
+
 # Your group work will involve the acupuncture data set. I've
 # uploaded a csv file in the Misc folder in the Files section.
 
@@ -131,9 +165,16 @@ length(which(boot_out$t > boot_out$t0))/1000
 # study participants. Explore the assumptions of the t-test
 # by examining the data through graphs.
 
+df <- read.csv("acupuncture.csv")
+head(df)
+
+
+
 # Part 2 is to identify a non-standard test statistic that 
 # your team suspects will also be sensitive to departures 
 # from the null hypothesis of no treatment effect. 
+
+
 
 # Part 3 is to use the non-standard test statistic in a 
 # permutation framework to determine the approximate significance
