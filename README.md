@@ -27,8 +27,12 @@ Version 1.0 did not figure out how to use `BinNorm` to generate the unattenuated
 - Version 2.0 adds the bonous part of the last question, i.e., the steepest descent method. 
 - Version 2.1 revise the minor typos and add the discussion about the why I choose not to normalize the gradient.  
 
-## Homework_07 solutions  
+## Homework_07 (the old version before spring break) solutions  
 This homework mainly talked about the Permuation test.
 - Version 1.0 finished by Chenguang Pan at 03.19.2023.
 - Version 1.1 added the reference part and minor revisions
+- This homework is the old version. Prof.Keller did not ask us to finish this one. I just do it for fun.
+
+## Homework_07 (the new version after spring break) solutions  
+This homework is a inclass activity.
 
