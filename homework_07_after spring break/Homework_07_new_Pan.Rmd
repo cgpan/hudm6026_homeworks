@@ -1,0 +1,152 @@
+---
+title: "HUDM6026 Homework_07 In-class Activity"
+author: Chenguang Pan & Seng Lei
+date: Mar 22, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 5
+    number_sections: false
+    keep_tex: true
+    highlight: tang
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```   
+## Part 1
+*Your group work will involve the acupuncture data set. I've uploaded a csv file in the Misc folder in the Files section.*
+
+*Data for this group work come from a randomized experiment to study the efficacy of acupuncture for treating headaches. Results of the trial were published in the British Medical Journal in 2004. You may view the paper at the following link:http://www.bmj.com/content/328/7442/744.full The data set includes 301 cases, 140 control (no acupuncture) and 161 treated (acupuncture). Participants were randomly assigned to groups. Variable names and descriptions are as follows:age; age in years sex; male = 0, female = 1 migraine; diagnosis of migraines = 1, diagnosis of tension-type headaches = 0 chronicity; number of years of headache disorder at baseline acupuncturist; ID for acupuncture provider group; acupuncture treatment group = 1, control group = 0 pk1; headache severity rating at baseline pk5; headache severity rating 1 year later*
+
+*Your task in group work today is to be done in three parts.*
+
+*Part 1 is to run the standard two-sample t-test to test if acupuncture significantly decreased headache pain in study participants. Explore the assumptions of the t-test by examining the data through graphs.*   
+
+
+**MY SOLUTION**
+```{r,fig.show='hold',out.width="50%",out.height= "25%"}
+# load the dataset
+df <- read.csv("acupuncture.csv")
+head(df)
+
+# subset the treatment and control group
+group_treat <- df$pk5[which(df$group==1)]
+group_control <- df$pk5[which(df$group==0)]
+
+# draw the graph of treatment and control group's effect
+library(tidyverse)
+par(mfrow=c(1, 2))
+df %>% ggplot(aes(x = factor(group), y = pk5)) + 
+  geom_boxplot()
+df %>% ggplot(aes(x = pk5),) +
+  geom_density(aes(color = factor(group)))
+```
+From the graphs we can see that the treatment group has lower average PK5 than control group. Next, I run the two-sample t-test and turn the argument `var.equal` to `FALSE`, although Levene's Test shows that there is no significant difference between the two groups' variance.
+
+```{r}
+# run the two-sample t-test
+t.test(group_treat, group_control,var.equal = FALSE)
+```  
+The Welch two sample t-test shows that there is statistically significant difference in two groups' average effect on `PK5`, $t(266.6)=-3.389$ and $p <.001$.  
+In addition, I checked the baseline balance on `PK1` to ensure that we can use `PK5` to ensure the ramdomization worked as intended. 
+```{r}
+# install the package to run Cohen's d
+# install.packages("lsr")
+library(lsr)
+# extract the treatment and control group at baseline
+basegroup_treat <- df$pk1[which(df$group==1)]
+basegroup_control <- df$pk1[which(df$group==0)]
+# calculate the cohen's d to check the balance
+cohensD(basegroup_treat,basegroup_control)
+```   
+The results show that the value of Cohen's D at baseline is .14, larger than .1 but fewer than .2. As a rule of thumb introduced by Maxwell et al.(2018), this result might cause some concern but not problematic. Further scrutiny is necessary. I also compare the ratio of group variance at baseline.
+
+```{r}
+# check the ratio of group variance for two groups at baseline
+ratio_of_variance <- var(basegroup_treat)/var(basegroup_control)
+ratio_of_variance
+```  
+The ratio is smaller than .8, which may also be a sign of concern. As Prof. Keller's instruction in HUDM5123, we need to continue to check the covariates balance at baseline. But I ignored this issue and moved to the next task here.  
+
+## Part 2  
+
+*Part 2 is to identify a non-standard test statistic that your team suspects will also be sensitive to departures from the null hypothesis of no treatment effect. leveene's test of the variance ratio or correlation pk1-pk5 in treatment/ pk1-pk5 in control rank all the data in pk5* 
+
+**MY SOLUTION**  
+First, I test the normality of two groups' distributions on `PK5`.
+```{r,fig.show='hold',out.width="50%",out.height= "50%"}
+# to test the normality of the two distribution
+shapiro.test(group_treat)
+shapiro.test(group_control)
+# draw the qq plot
+mfrow=c(1,2)
+qqnorm(group_treat)
+qqline(group_treat)
+qqnorm(group_control)
+qqline(group_control)
+```  
+The Shapiro-Wilk Test and the Q-Q plot indicate that the both groups are not follow the normal distribution. From the original distribution graph made in the Part 1, one can see both distributions are positively skewed.  
+
+Therefore, running the regular two-sample T test in Part-1 may not a good choice since it compares the central tendency by using means and this statistic might be influenced by the extreme values. 
+
+We decided to choose the ranked-based test,i.e., the Wilcoxon rank-sum test, which is more robust to departures from normality since this test use median rather than mean to represent the central tendency and median is less sensitive to extreme values.
+
+```{r}
+obs_test_resulst <- wilcox.test(group_treat, group_control, alternative = "two.sided")
+obs_test_resulst
+```  
+The Wilcoxon rank-sum test's result presents that the two groups' medians are significantly different, $p < .001$. The two groups have different distributions.  
+
+## Part 3  
+
+*Part 3 is to use the non-standard test statistic in a permutation framework to determine the approximate significance level (p-value).* 
+
+**MY SOLUTION**  
+
+```{r}
+library(boot)
+
+# write a function to conduct the Wilcoxon rank-sum test
+median_diff <- function(dat, index) {
+  # fix the group assignments
+  treat_or_not <- dat$group
+  # permute the pk5 (combined data)
+  pk5 <- dat$pk5[index]
+  # extract the treat and control groups
+  treat <- pk5[which(treat_or_not==1)]
+  control <- pk5[which(treat_or_not==0)]
+  # run the Wilcoxon rank-sum test to get the statistic
+  test_out <- median(treat-control)
+  return(test_out)
+}
+
+
+boot_out <- boot(data = df, 
+                 statistic = median_diff, 
+                 R = 10000, sim = "permutation")
+# use the observed statistic got from the part
+hist(boot_out$t, 50)
+p_value <- length(which(abs(boot_out$t) >= abs(boot_out$t0)))/ length(boot_out$t)
+p_value
+```  
+The permutation result indicates that the difference in medians is still statistically significant , *p*=`r p_value`.
+
+
+
+
+
+
+
+
+
+
+
+
