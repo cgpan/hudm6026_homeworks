@@ -324,8 +324,8 @@ framework to determine the approximate significance level (p-value).}
 \SpecialCharTok{+}   \CommentTok{\# extract the treat and control groups}
 \SpecialCharTok{+}\NormalTok{   treat }\OtherTok{\textless{}{-}}\NormalTok{ pk5[}\FunctionTok{which}\NormalTok{(treat\_or\_not}\SpecialCharTok{==}\DecValTok{1}\NormalTok{)]}
 \SpecialCharTok{+}\NormalTok{   control }\OtherTok{\textless{}{-}}\NormalTok{ pk5[}\FunctionTok{which}\NormalTok{(treat\_or\_not}\SpecialCharTok{==}\DecValTok{0}\NormalTok{)]}
-\SpecialCharTok{+}   \CommentTok{\# run the Wilcoxon rank{-}sum test to get the statistic}
-\SpecialCharTok{+}\NormalTok{   test\_out }\OtherTok{\textless{}{-}} \FunctionTok{median}\NormalTok{(treat}\SpecialCharTok{{-}}\NormalTok{control)}
+\SpecialCharTok{+}   \CommentTok{\# get the difference in medians, and return the absolute value}
+\SpecialCharTok{+}\NormalTok{   test\_out }\OtherTok{\textless{}{-}} \FunctionTok{abs}\NormalTok{(}\FunctionTok{median}\NormalTok{(treat)}\SpecialCharTok{{-}} \FunctionTok{median}\NormalTok{(control))}
 \SpecialCharTok{+}   \FunctionTok{return}\NormalTok{(test\_out)}
 \SpecialCharTok{+}\NormalTok{ \}}
 \SpecialCharTok{\textgreater{}} 
@@ -344,11 +344,11 @@ framework to determine the approximate significance level (p-value).}
 \begin{Highlighting}[]
 \SpecialCharTok{\textgreater{}}\NormalTok{ p\_value }\OtherTok{\textless{}{-}} \FunctionTok{length}\NormalTok{(}\FunctionTok{which}\NormalTok{(}\FunctionTok{abs}\NormalTok{(boot\_out}\SpecialCharTok{$}\NormalTok{t) }\SpecialCharTok{\textgreater{}=} \FunctionTok{abs}\NormalTok{(boot\_out}\SpecialCharTok{$}\NormalTok{t0)))}\SpecialCharTok{/} \FunctionTok{length}\NormalTok{(boot\_out}\SpecialCharTok{$}\NormalTok{t)}
 \SpecialCharTok{\textgreater{}}\NormalTok{ p\_value}
-\NormalTok{[}\DecValTok{1}\NormalTok{] }\FloatTok{0.0055}
+\NormalTok{[}\DecValTok{1}\NormalTok{] }\FloatTok{4e{-}04}
 \end{Highlighting}
 \end{Shaded}
 
 The permutation result indicates that the difference in medians is still
-statistically significant , \emph{p}=0.0055.
+statistically significant , \emph{p}=\ensuremath{4\times 10^{-4}}.
 
 \end{document}

@@ -123,8 +123,8 @@ median_diff <- function(dat, index) {
   # extract the treat and control groups
   treat <- pk5[which(treat_or_not==1)]
   control <- pk5[which(treat_or_not==0)]
-  # run the Wilcoxon rank-sum test to get the statistic
-  test_out <- median(treat-control)
+  # get the difference in medians, and return the absolute value
+  test_out <- abs(median(treat)- median(control))
   return(test_out)
 }
 
