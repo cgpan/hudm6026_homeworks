@@ -1,0 +1,424 @@
+---
+title: "HUDM6026 Homework_09"
+author: Chenguang Pan
+date: Mar 31, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 6
+    number_sections: false
+    keep_tex: true
+    highlight: tang
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```   
+## Q1: Chapter 3.9  
+*Chapter 3, problem 9.Chapter 4, problems 1, 6, 13*
+*This question involves the use of multiple linear regression on the Auto data set.*  
+
+### *(a)Produce a scatterplot matrix which includes all of the variables in the data set.*  
+
+**MY SOLUTION:**
+```{r}
+# import the package and the data
+library(ISLR2)
+data(Auto)
+pairs(Auto,cex=0.5,
+      main = "Firgue 1. Scatterplot matrix of Auto dataset")
+```  
+Or, one can use the package `GGally` to make the scatterplot in a more informative way. But before running this function, one should drop the categorical variable `name` in case of warning. More details can be found at https://r-charts.com/correlation/ggpairs/ .   
+```{r}
+library(GGally)
+colnames(Auto)
+ggpairs(Auto[,-9], # drop the name variable
+        # adjust the font size in the upper panel
+        upper = list(continuous=wrap("cor", size = 2.0)),
+        # add main title
+        title ="Firgue 2. Scatterplot matrix of Auto dataset using ggpairs()" )
+```  
+
+### *(b)Compute the matrix of correlations between the variables using the function cor(). You will need to exclude the name variable, which is qualitative*   
+
+**MY SOLUTION:**  
+To make the corealtion matrix looking good, I abbreviated the variables' names to save space.
+```{r}
+# save the matrix to cor_mat
+cor_mat <- round(cor(Auto[,-9]),3)
+# abbreviate the variables' names
+names <- abbreviate(colnames(Auto[,-9]),4)
+rownames(cor_mat) <- names
+colnames(cor_mat) <- names
+cor_mat
+```  
+
+### *(c) Use the lm() function to perform a multiple linear regression with mpg as the response and all other variables except name as the predictors. Use the summary() function to print the results. Comment on the output. For instance:* 
+
+**MY SOLUTION:**  
+
+```{r}
+# run the multiple linear regression model
+model_01 <- lm(mpg ~. -name, data = Auto )
+summary(model_01)
+```  
+The multiple linear regression analysis results show that the overall model can explain 82.15% variance of the outcome variable `mpg`, and the mode predict the outcome well, $F(7,384)=252.4$, $p < .001$. The variable `displacement`,     `weight`, `year`, and `origin` have a statistically significant relationship with the outcome. Specifically, one year increase (i.e., the ) in `year` variable will be associated with .75 increase in the `mpg` after controlling for all other variables, $t = 14.729$, $p <.001$.  
+
+### *(d)Use the plot() function to produce diagnostic plots of the linear regression fit. Comment on any problems you see with the fit. Do the residual plots suggest any unusually large outliers? Does the leverage plot identify any observations with unusually high leverage?* 
+
+**MY SOLUTION:**  
+Reference for this part https://www.andrew.cmu.edu/user/achoulde/94842/homework/regression_diagnostics.html.   
+http://www.h4labs.com/ml/islr/chapter03/03_09_melling.html
+```{r}
+par(mfrow=c(2,2))
+plot(model_01)
+```  
+The *Residuals vs. Fitted plot* shows that the average value of the residuals at each value of fitted value (i.e., the red line) has a U-shape pattern, which might indicate that the data is not linear. In addition, the residuals presents non-equally distribution across the entire range of fitted values. It is a sign of non-constant variance.
+
+The *normal Q-Q plot* shows that the residuals have a good normal distribution despite some data points at the tails.
+
+The *scale-location plot* supports the findings from the *Residuals vs. Fitted plot* that there is non-equal variance. Also, it presents that there is no outlier since all values are within the range of [-2,2].
+
+From the last plot, all data are well inside the Cook's distance lines (red-dotted line). Therefore, there is no influential case (high leverage data) in this dataset.
+
+In conclusion, the diagnostic plots indicate the non-equal variance, no outliers, and not high leverage data.  
+
+
+### *(e)Use the and : symbols to fit linear regression models with interaction effects. Do any interactions appear to be statistically significant?* 
+
+**MY SOLUTION:**  
+
+Tips: What is the difference between the symbol `*` and `:` in `lm()`?  
+The `*` symbol specifies that we want to include both the main effect and the interaction term. ` lm(y ~ x * z)` equals `lm(y ~ x + z + x:z)`.  
+The `:` symbol specifies that we want to include only the interaction term. `lm(y ~ x : z)` equals `lm(y ~ x*z - x - z)`.
+```{r}
+colnames(Auto)
+model_02 <- lm(mpg ~.-name + horsepower:weight, data = Auto)
+model_03 <- lm(mpg ~.-name + horsepower:origin, data = Auto)
+summary(model_02)
+summary(model_03)
+```  
+The two models presents the statistically significant interactions between the `horsepower` and `weight`, also the `horsepower` and `origin`. 
+
+### *(f)Try a few different transformations of the variables* 
+
+**MY SOLUTION:**  
+```{r}
+model_04 <- lm(mpg ~.-name + I(horsepower^2)+I(horsepower^3),data = Auto)
+summary(model_04)
+model_05 <- lm(mpg ~.-name + log(horsepower),data = Auto)
+summary(model_05)
+```  
+Here, I tried to add the different transformations of `horsepower` variable. All models can explain the outcome well, as all p-values are less than .001. Besides, referring to the $adjusted R^2$, the `model_04` with the quadratic and cubic form with `horsepower` has the best performance, $adjusted R^2=.8574$.
+
+
+## Q2: Chapter 4.1  
+*Using a little bit of algebra, prove that (4.2) is equivalent to (4.3). In other words, the logistic function representation and logit represen- tation for the logistic regression model are equivalent*    
+
+**MY SOLUTION**  
+For typing convenience, let $A= e^{\beta_0+\beta_1X}$. Therefore, the formular (4.2) can be written as $p(X) = \frac{A}{1+A}$. This form-changing is similar to get the inverse function for $p(X)$. That is, we suppose that $A$ is the function of $p(x)$. Thus, we can have $$p(X) + p(X)A = A,$$$$A[1-p(X)]=p(X).$$ Then we have $$A=\frac{p(X)}{1-P(X)}.$$ After changing the A into the original form, finally we have $$e^{\beta_0+\beta_1X} = \frac{p(X)}{1-p(X)}.$$  
+
+## Q3: Chapter 4.6  
+*Suppose we collect data for a group of students in a statistics class with variables X1 = hours studied, X2 = undergrad GPA, and Y = receive an A. We fit a logistic regression and produce estimated coefficient*    
+
+### **(a)Estimate the probability that a student who studies for 40 h and has an undergrad GPA of 3.5 gets an A in the class.**
+
+**MY SOLUTION**  
+```{r}
+prob_A  <- function(b0=-6, b1=0.05, b2=1,x1, x2){
+  # write the exponential part
+  exp_p <- exp(b0 + b1*x1 + b2*x2)
+  # write the logistic function
+  p_A <- exp_p/(1+exp_p)
+  return(p_A)
+}
+```  
+Plug the known values into the function above, we can have
+```{r}
+prob_A(x1=40,x2=3.5)
+```  
+Therefore, the probability for that student to get an A is `r round(prob_A(x1=40,x2=3.5),3)`.  
+
+### **(b)Estimate the probability that a student who studies for 40 h and has an undergrad GPA of 3.5 gets an A in the class.**
+
+**MY SOLUTION**  
+To solve this question, we need to do some algebra. Rewrite the original function as following: $$e^{\beta_0 + \beta_1x_1 + \beta_2x_2} = \frac{p(X)}{1-p(X)},$$ $$\beta_0 + \beta_1x_1 + \beta_2x_2 = ln(\frac{p(X)}{1-p(X)}),$$ $$x_1 =\frac{ln(\frac{p(X)}{1-p(X)})-\beta_0 - \beta_2x_2}{\beta_1}.$$ Therefore, based on the last function, we plug all the known value,
+```{r}
+x1 <- (log(exp(1))-(-6)-1*(3.5))/0.05
+x1
+```  
+The student need to spend `r x1` hours to have the 50% chance of getting an A. Note, if this is a real logistic model, the result should in the form of confidence interval rather than a single value.  
+
+
+## Q4: Chapter 4.13  
+*This question should be answered using the Weekly data set, which is part of the ISLR2 package. This data is similar in nature to the Smarket data from this chapter’s lab, except that it contains 1,089 weekly returns for 21 years, from the beginning of 1990 to the end of 2010.*    
+
+### **(a)Produce some numerical and graphical summaries of the Weekly data. Do there appear to be any patterns?**
+
+**MY SOLUTION**  
+```{r}
+library(ISLR2)
+attach(Weekly)
+dim(Weekly)
+levels(Weekly$Direction)
+summary(Weekly)
+```   
+From the summary of each variable, there are 8 continuous variables and 1 categorical variable with "Down" and "Up" labels. Next, I checked the correlation matrix.  
+```{r}
+attach(Weekly)
+round(cor(Weekly[,-9]),3)
+plot(Year, Volume)
+```   
+From the correlation matrix, one can find the only the variable `Year` and `Volume` showing the strong correlation. One possible explanation is that with the development of the global economy, the number of shares traded also increases.
+```{r}
+pairs(Weekly[,-9])
+```  
+Here, I also checked the scatterplot matrix. It indicates that the strong correlation might only occurs on `Year` and `Volume`.
+
+### **(b)Use the full data set to perform a logistic regression with Direction as the response and the five lag variables plus Volume as predictors. Use the summary function to print the results. Do any of the predictors appear to be statistically significant? If so, which ones?**
+
+**MY SOLUTION**  
+```{r}
+# run the logistic model using glm() function
+colnames(Weekly)
+model_logi <- glm(Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume,
+                  data = Weekly, family = binomial)
+summary(model_logi)
+```  
+The logistic regression analysis shows that the variable  `Lag2` is a statistically significant predictor $p = .030$. That is, one unit increase in the percentage returns of two days before(i.e., `Lag2`) will be associated with .058 increase in the log-odds of `Up` vs. `Down`, $z = 2.175$, $p=.030$, holding all other variables constant.  
+
+
+### **(c)Compute the confusion matrix and overall fraction of correct predictions. Explain what the confusion matrix is telling you about the types of mistakes made by logistic regression.**   
+
+
+**MY SOLUTION**  
+
+First, use the `predict()` function to get the model-estimated values of the outcome. Note, the argument `type = "response"` option tells R to output probabilities of the form P(Y = 1|X), as opposed to other information such as the logit.
+```{r}
+# get the predicted value of the outcome
+model_logi_est <- predict(model_logi, type = "response")
+round(model_logi_est[1:20],3)
+```  
+The estimated values looks good. Next to change the probabilities into two direction.
+```{r}
+dim(Weekly)
+# create a vector of 1089 label "Down"
+pred_direct <- rep("Down", 1089)
+# change the Down to up if the probability is greater than .50
+pred_direct[model_logi_est > .50] <- "Up"
+# make a confusion matrix to compare the results
+table(pred_direct, Weekly$Direction)
+# we can also to get the match rate by 
+accuracy <- length(pred_direct[which(pred_direct == Weekly$Direction)])/ nrow(Weekly)
+accuracy
+```  
+In this case, logistic regression correctly predicted the movement of the market `r round(accuracy,3)` of the time.  
+
+### **(d)Now fit the logistic regression model using a training data period from 1990 to 2008, with Lag2 as the only predictor. Compute the confusion matrix and the overall fraction of correct predictions for the held out data (that is, the data from 2009 and 2010).**   
+
+
+**MY SOLUTION**  
+```{r}
+attach(Weekly)
+# create a vector with T or F values at the length of dataset
+train <- (Year < 2009)
+# use this vector to subset the train data
+df_train <- Weekly[train,]
+df_test <- Weekly[!train,]
+# re-run the logistic regression model using only one predictor
+model_logi2 <- glm(Direction~ Lag2, data = df_train, family = binomial)
+# get the predicted value on the test dataset.
+model_logi_est2 <- predict(model_logi2, newdata=df_test, type = "response")
+# change the lable
+pred_direct2 <- ifelse(model_logi_est2 >0.5, "Up", "Down")
+# make a confusion matrix to compare the results
+table(pred_direct2, df_test$Direction)
+# we can also to get the match rate by 
+accuracy <- length(pred_direct2[which(pred_direct2 == df_test$Direction)])/ nrow(df_test)
+accuracy
+```  
+In this case, logistic regression correctly predicted the movement of the market `r round(accuracy,3)` of the time.  
+
+### **(e)Repeat (d) using LDA**   
+
+
+**MY SOLUTION**  
+Note LDA/QDA/Naive Bayes all belong to Bayesian Classifier Method with different distribution assumptions.  
+
+The LDA classifier results from assuming that the observation within each class come from a normal distribution with a class-specific mean and a common variance, and plugging estimates for these parameters into the Bayesian classifier.
+```{r}
+library(MASS)
+# run the LDA model
+lda_fit <- lda(Direction~ Lag2, data= df_train)
+# using the esitimated result to run on the test dataset
+# get the predicted value on the test dataset.
+lda_pred<- predict(lda_fit, newdata=df_test)
+# change the lable
+lda_class <- lda_pred$class
+table(lda_class, df_test$Direction)
+mean(lda_class == df_test$Direction)
+```  
+In this case, LDA correctly predicted the movement of the market `r round(mean(lda_class == df_test$Direction),3)` of the time.  
+
+### **(f)Repeat (d) using QDA**   
+
+
+**MY SOLUTION**  
+running QDA is similar to LDA.
+```{r}
+# run the QDA model
+library(MASS)
+qda_fit <- qda(Direction~ Lag2, data= df_train)
+# using the esitimated result to run on the test dataset
+# get the predicted value on the test dataset.
+qda_pred<- predict(qda_fit, newdata=df_test)
+# change the lable
+qda_class <- qda_pred$class
+table(qda_class, df_test$Direction)
+mean(qda_class == df_test$Direction)
+```  
+In this case, QDA correctly predicted the movement of the market `r round(mean(qda_class == df_test$Direction),3)` of the time.  
+
+### **(g)Repeat (d) using KNN with K=1**   
+
+
+**MY SOLUTION**  
+Note, `knn()` function requires four inputs:  
+- A matrix containing the predictors associated with the training data;  
+- A matrix containing the predictors associated with the data for which we wish to make predictions;  
+- A vector containing the class labels for the training observations;  
+- A value for K, the number of nearest neighbors to be used by the classifier.  
+
+```{r}
+library(class)
+# extract the required inputs
+train.X <- df_train$Lag2
+test.X <- df_test$Lag2
+train.Direction <- df_train$Direction
+
+#  run KNN
+knn.pred <- knn(as.matrix(train.X), as.matrix(test.X), train.Direction, k = 1)
+result <- round(mean(knn.pred == df_test$Direction),3)
+result
+```
+In this case, KNN correctly predicted the movement of the market `r result` of the time.  
+
+### **(h)Repeat (d) using Naive Bayes**   
+
+**MY SOLUTION**  
+Remember instead of assuming that these functions belong to a particular family of distributions, Naive Bayes make a simple assumption: Within the kth class, the p predictors are independent.
+```{r}
+library(e1071)
+nb_fit <- naiveBayes(Direction ~ Lag2,data=df_train)
+nb_class <- predict(nb_fit, newdata=df_test)
+table(nb_class, df_test$Direction)
+result <- mean(nb_class == df_test$Direction)
+result
+```  
+In this case, Naive Bayes Classifier correctly predicted the movement of the market `r round(result,3)` of the time.  
+
+### **(i)Which of these methods appears to provide the best results on this data**   
+
+**MY SOLUTION**  
+The results show that the logistic regression and LDA has the best performance.  
+
+### **(j)Experiment with different combinations of predictors, including possible transformations and interactions, for each of the methods. **   
+
+**MY SOLUTION**  
+I try the KNN with different K first. 
+```{r}
+y_pre <- c()
+range_ <- c(1:100)
+for (x in range_){
+  knn.pred <- knn(as.matrix(train.X), as.matrix(test.X), train.Direction, k = 1)
+  result <- round(mean(knn.pred == df_test$Direction),3)
+  y_pre <- c(y_pre, result)
+}
+plot(range_, y_pre,
+     type = "l",# to draw a line rather than a spot
+     main = "The Performance of Different K",
+     xlab = "K values",
+     ylab = "The Accuracy")
+grid()
+```  
+As shown in the plot, with different K, the best accuracy that KNN can reach is identical. Therefore, I choose K = 1 for parsimony concern.  
+
+Next, I will try re-run several model by adding interaction of `Lag2` and `Volume` since the percentage return in the previous days may affect the investors confidence. Therefore, the trading volume `Volume` might depend on that. In addition, I arbitrarily choose to add the quadratic and cubic form of volume into the model. I will consider the predictive accuracy as the ultimate performance criterion. 
+
+```{r}
+# re-run the logistic regression analysis
+attach(Weekly)
+# re-run the logistic regression model using only one predictor
+logi_inter <- glm(Direction~ Lag2 + Volume + Lag2:Volume+ I(Volume^2) + I(Volume^3), data = df_train, family = binomial)
+# get the summary of the estimation
+summary(logi_inter)
+# get the predicted value on the test dataset.
+logi_est <- predict(logi_inter, newdata=df_test, type = "response")
+# change the lable
+logi_direct <- ifelse(logi_est >0.5, "Up", "Down")
+# make a confusion matrix to compare the results
+table(logi_direct, df_test$Direction)
+# we can also to get the match rate by 
+accuracy <- length(logi_direct[which(logi_direct == df_test$Direction)])/ nrow(df_test)
+accuracy
+```   
+In this case, logistic regression correctly predicted the movement of the market `r round(accuracy,3)` of the time. 
+
+Next, I re-run the LDA, QDA, and Naive Bayes model.  
+```{r}
+# run the LDA model
+library(MASS)
+lda_fit <- lda(Direction~ Lag2 + Volume + Lag2:Volume+ I(Volume^2) + I(Volume^3), data= df_train)
+# using the esitimated result to run on the test dataset
+# get the predicted value on the test dataset.
+lda_pred<- predict(lda_fit, newdata=df_test)
+# change the lable
+lda_class <- lda_pred$class
+table(lda_class, df_test$Direction)
+mean(lda_class == df_test$Direction)
+```  
+In this case, LDA correctly predicted the movement of the market `r round(mean(lda_class == df_test$Direction),3)` of the time.  
+
+```{r}
+# run the QDA model
+library(MASS)
+qda_fit <- qda(Direction~ Lag2 + Volume + Lag2:Volume+ I(Volume^2) + I(Volume^3), data= df_train)
+# using the esitimated result to run on the test dataset
+# get the predicted value on the test dataset.
+qda_pred<- predict(qda_fit, newdata=df_test)
+# change the lable
+qda_class <- qda_pred$class
+table(qda_class, df_test$Direction)
+mean(qda_class == df_test$Direction)
+```  
+In this case, QDA correctly predicted the movement of the market `r round(mean(qda_class == df_test$Direction),3)` of the time.   
+
+Note, the Bayes classier cannot handle the interaction term! I removed the interaction term in the model.
+
+```{r}
+library(e1071)
+nb_fit <- naiveBayes(Direction~ Lag2 + Volume + I(Volume^2) + I(Volume^3),data=df_train)
+nb_class <- predict(nb_fit, newdata=df_test)
+table(nb_class, df_test$Direction)
+result <- mean(nb_class == df_test$Direction)
+result
+```  
+In this case, Naive Bayes Classifier correctly predicted the movement of the market `r round(result,3)` of the time.
+
+In conclusion, LDA has the best predictive accuracy `r round(mean(lda_class == df_test$Direction),3)` among these models. Comparing to the models in previous section, selecting the appropriate predictors in the right form is critical for model's performance. One should notice that it might not be a good choice to add as many as possible predictors to your model. 
+
+This dataset is obviously in a time-series form. Maybe some more advanced and flexible methods can be tested on this dataset, like long short-term memory networks (LSTM) model, although the model will become less interpretable. If I finished my class works, I will try run this analysis on Google Colab via Python.
+
+
+
+
+
+
+
