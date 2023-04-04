@@ -1,0 +1,160 @@
+---
+title: "HUDM6026 Homework_10"
+author: Chenguang Pan
+date: April 04, 2023
+output:
+  pdf_document:
+    toc: false
+    toc_depth: 6
+    number_sections: true
+    keep_tex: true
+    highlight: tang
+---
+
+```{r setup, include=FALSE}
+## Global options
+knitr::opts_chunk$set(
+  cache = TRUE,
+  prompt = TRUE,
+  comment = '',
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE)
+```   
+
+## ISLR_Chapter 6.10  
+*We have seen that as the number of features used in a model increases, the training error will necessarily decrease, but the test error may not. We will now explore this in a simulated data set.*  
+
+### (a)  
+*Generate a data set with p = 20 features, n = 1,000 observations, and an associated quantitative response vector generated according to the model*  
+
+**MY SOLUTION:**  
+
+Thinking multiple variate regression in matrix form provides a more efficient way to estimate or simulate. Since generating the multivariate normal distribution needs the connivance matrix and mean vector, like shown in Dr.Keller's in-class R syntax, we need to define them first.
+
+```{r}
+# import the packages
+library(mvtnorm)
+library(clusterGeneration)
+
+# ---------------------
+# STAGE 1 PREPARE
+# ---------------------
+# set the random seed
+set.seed(666)
+# Generate a random covariance matrix with package clusterGeneration
+cov1 <- genPositiveDefMat(dim=20, # create 20 covariates
+                          covMethod = "eigen")
+# Generate a random vector of 20 means from a normal distribution with N(0, 20)
+mns1 <- rnorm(20,0,sd=20)
+# Generate coefficients vector for the output for Y from norm(0, 1)  
+coef1 <- rnorm(21, # Beta0 + Beta1 +...+ Beta20
+               0,1) # drawn from a normal distribution N(0,1)
+### Set ten of them equal to zero
+coef1[sample(2:21, 10, replace = FALSE)] <- 0
+
+# ---------------------------------------
+# STAGE 2 BUILD DATA GENERATING FUNCTION
+# ---------------------------------------
+dataGen <- function(N){
+  # Generate the X matrix 
+  X <- rmvnorm(n=N, mean = mns1,sigma = cov1$Sigma)
+  # augmenting the X matrix
+  X_aug <- cbind(1,X)
+  # create the output Y with error term vector following the N(0,1)
+  Y <- X_aug %*% coef1 + rnorm(N,0,1)
+  # adjust the output
+  dfOut <-  data.frame(cbind(X,Y))
+  names(dfOut) <- c(paste0("X",1:20), "Y")
+  return(dfOut)
+}
+
+# ----------------------
+# STAGE 3 GENERATE DATA
+# ----------------------
+df <- dataGen(1000)
+head(df)
+dim(df)
+```  
+The data looks good.  
+
+### (b)  
+*Split your dataset into a training set containing 100 observations and a test set containing 900 observations.*  
+
+**MY SOLUTION:**  
+```{r}
+# generate a random index from 1:1000 
+set.seed(666)
+index_rdm <- sample(c(1:1000),100)
+# separate the dataset into train and test dataset
+df_train <- df[index_rdm,]
+df_test <- df[-index_rdm,]
+dim(df_train)
+dim(df_test)
+```  
+The randomly-subseted train- and test-dataset look good.  
+
+### (c)  
+*Perform best subset selection on the training set, and plot the training set MSE associated with the best model of each size.*  
+
+**MY SOLUTION:**  
+```{r}
+library(bestglm)
+bss_out <- regsubsets(Y ~., data = df_train, nvmax=20)
+bss_out_summary <- summary(bss_out)
+```  
+Note, by default, the `regsubsets()` only returns the first 8 models.  
+Based on the definition, we can get easily get the MSE since $MSE = \frac{RSS}{n}$.
+```{r,fig.show='hold',out.width="50%",out.height= "50%"}
+plot(bss_out_summary$rss/nrow(df_train),
+     xlab = "Number of Vairables",
+     ylab = "MSE",
+     type = "l")
+title(main = "Figure 1. Training set MSE associated with the best model of each size.", 
+      cex.main = 1)
+```  
+
+### (d)  
+*Plot the test set MSE associated with the best model of each size.*  
+
+**MY SOLUTION:**  
+Since there is no `predict()` function built in the `regsubsets()`, I need to write by hand.
+```{r} 
+# note the test dataset is in data.frame format need to be change to matrix
+df_test_matrix <- as.matrix(df_test)
+names(coef(bss_out, id=2))[-1]
+
+test_mse <- c()
+for (i in 1:20) {
+  # to extract the coefficient vector for each best model
+  coefi <- coef(bss_out, id=i)
+  # select the corresponding variables and times the coefficients
+  X_temp <- df_test_matrix[,names(coefi)[-1]]
+  X_temp_aug <- cbind(1, X_temp)
+  pred <- X_temp_aug %*% coefi
+  # use the estimated vector of outcome to get the MSE
+  mse <- mean((df_test[,"Y"]-pred)^2)
+  test_mse[i] <- mse
+}
+test_mse
+```  
+The result looks good. Next, I plot the MSE.
+```{r,fig.show='hold',out.width="50%",out.height= "50%"}
+plot(test_mse,
+     xlab = "Number of Vairables",
+     ylab = "MSE",
+     type = "l")
+title(main = "Figure 2. Test-set MSE associated with the best model of each size.", 
+      cex.main = 1)
+min_index <- which.min(test_mse)
+points(min_index,test_mse[min_index],col="red",cex=2, pch=20)
+abline(h=min(test_mse), col="red",lty="longdash")
+```  
+
+### (e)  
+*For which model size does the test set MSE take on its minimum value? Comment on your results.*  
+
+**MY SOLUTION:**  
+
+
+

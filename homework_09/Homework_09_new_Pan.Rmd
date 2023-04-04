@@ -233,7 +233,7 @@ train <- (Year < 2009)
 df_train <- Weekly[train,]
 df_test <- Weekly[!train,]
 # re-run the logistic regression model using only one predictor
-model_logi2 <- glm(Direction~ Lag2, data = df_train, family = binomial)
+model_logi2 <- glm(Direction~ Lag2, data= df_train,family = binomial)
 # get the predicted value on the test dataset.
 model_logi_est2 <- predict(model_logi2, newdata=df_test, type = "response")
 # change the lable
