@@ -99,12 +99,12 @@
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={HUDM6026 Homework\_10},
-  pdfauthor={Chenguang Pan},
+  pdfauthor={Chenguang Pan \& Seng Lei},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
 \title{HUDM6026 Homework\_10}
-\author{Chenguang Pan}
+\author{Chenguang Pan \& Seng Lei}
 \date{April 04, 2023}
 
 \begin{document}
@@ -314,5 +314,139 @@ The result looks good. Next, I plot the MSE.
 \end{Shaded}
 
 \includegraphics[width=0.5\linewidth,height=0.5\textheight]{Homework_10_Pan_files/figure-latex/unnamed-chunk-6-1}
+
+\hypertarget{e}{%
+\subsubsection{(e)}\label{e}}
+
+\emph{For which model size does the test set MSE take on its minimum
+value? Comment on your results.}
+
+\textbf{MY SOLUTION:}\\
+\emph{Figure 2} shows that the model with 10 predictors has the lowest
+test MSE. From the results below, the ten covariates are
+\(X1\),\(X4\),\(X7\),\(X9\),\(X10\),\(X13\),\(X14\),\(X15\),\(X19\), and
+\(X20\).
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ bss\_out\_summary}\SpecialCharTok{$}\NormalTok{outmat[}\DecValTok{10}\NormalTok{,]}
+\NormalTok{ X1  X2  X3  X4  X5  X6  X7  X8  X9 X10 X11 X12 X13 X14 X15 X16 X17 X18 X19 X20 }
+\StringTok{"*"} \StringTok{" "} \StringTok{" "} \StringTok{"*"} \StringTok{" "} \StringTok{" "} \StringTok{"*"} \StringTok{" "} \StringTok{"*"} \StringTok{"*"} \StringTok{" "} \StringTok{" "} \StringTok{"*"} \StringTok{"*"} \StringTok{"*"} \StringTok{" "} \StringTok{" "} \StringTok{" "} \StringTok{"*"} \StringTok{"*"} 
+\end{Highlighting}
+\end{Shaded}
+
+\hypertarget{f}{%
+\subsubsection{(f)}\label{f}}
+
+\emph{How does the model at which the test set MSE is minimized compare
+to the true model used to generate the data? }
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# extract the estimated 10{-}predictor model\textquotesingle{}s coefficient}
+\ErrorTok{\textgreater{}} \FunctionTok{round}\NormalTok{(}\FunctionTok{coef}\NormalTok{(bss\_out,}\AttributeTok{id=}\DecValTok{10}\NormalTok{),}\DecValTok{3}\NormalTok{)}
+\NormalTok{(Intercept)          X1          X4          X7          X9         X10 }
+      \FloatTok{9.692}      \SpecialCharTok{{-}}\FloatTok{0.448}       \FloatTok{0.486}       \FloatTok{0.146}       \FloatTok{0.391}       \FloatTok{0.213} 
+\NormalTok{        X13         X14         X15         X19         X20 }
+     \SpecialCharTok{{-}}\FloatTok{0.748}      \SpecialCharTok{{-}}\FloatTok{0.353}      \SpecialCharTok{{-}}\FloatTok{0.785}       \FloatTok{1.306}      \SpecialCharTok{{-}}\FloatTok{1.017} 
+\SpecialCharTok{\textgreater{}} \CommentTok{\# extract the original 10{-}predictor model\textquotesingle{}s coefficient}
+\ErrorTok{\textgreater{}}\NormalTok{ original\_coef }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{matrix}\NormalTok{(}\FunctionTok{round}\NormalTok{(coef1[}\FunctionTok{which}\NormalTok{(coef1 }\SpecialCharTok{!=}\DecValTok{0}\NormalTok{)],}\DecValTok{3}\NormalTok{),}
+\SpecialCharTok{+}                                       \DecValTok{1}\NormalTok{,}\DecValTok{11}\NormalTok{,}\AttributeTok{byrow=}\NormalTok{T))}
+\SpecialCharTok{\textgreater{}} \FunctionTok{names}\NormalTok{(original\_coef) }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{(}\StringTok{"Intercept"}\NormalTok{,}\StringTok{"X1"}\NormalTok{,}\StringTok{"X4"}\NormalTok{,}\StringTok{"X7"}\NormalTok{,}\StringTok{"X9"}\NormalTok{,}\StringTok{"X10"}\NormalTok{,}\StringTok{"X13"}\NormalTok{,}\StringTok{"X14"}\NormalTok{,}\StringTok{"X15"}\NormalTok{,}\StringTok{"X19"}\NormalTok{, }\StringTok{"X20"}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ original\_coef}
+\NormalTok{  Intercept     X1    X4    X7    X9   X10    X13    X14    X15  X19    X20}
+\DecValTok{1}     \FloatTok{0.726} \SpecialCharTok{{-}}\FloatTok{0.489} \FloatTok{0.515} \FloatTok{0.091} \FloatTok{0.375} \FloatTok{0.198} \SpecialCharTok{{-}}\FloatTok{0.607} \SpecialCharTok{{-}}\FloatTok{0.506} \SpecialCharTok{{-}}\FloatTok{0.821} \FloatTok{1.28} \SpecialCharTok{{-}}\FloatTok{0.994}
+\end{Highlighting}
+\end{Shaded}
+
+Comparing the estimated coefficients and the original coefficients, we
+can see that:\\
+- first, the number of the coefficient are the same;\\
+- second, the value of each estimated coefficient is very close to the
+original one;
+
+\hypertarget{g}{%
+\subsubsection{(g)}\label{g}}
+
+\emph{Create a plot displaying \ldots{} for a range of values of r,
+where . is the jth coeffcicient for the best model containing r
+coeeficients.Comment on what you observe. How does this compare to the
+test MSE plot from (d) }
+
+\textbf{MY SOLUTION:}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}}\NormalTok{ coef1}
+\NormalTok{ [}\DecValTok{1}\NormalTok{]  }\FloatTok{0.72560162} \SpecialCharTok{{-}}\FloatTok{0.48873390}  \FloatTok{0.00000000}  \FloatTok{0.00000000}  \FloatTok{0.51543421}  \FloatTok{0.00000000}
+\NormalTok{ [}\DecValTok{7}\NormalTok{]  }\FloatTok{0.00000000}  \FloatTok{0.09143147}  \FloatTok{0.00000000}  \FloatTok{0.37483448}  \FloatTok{0.19752628}  \FloatTok{0.00000000}
+\NormalTok{[}\DecValTok{13}\NormalTok{]  }\FloatTok{0.00000000} \SpecialCharTok{{-}}\FloatTok{0.60668500} \SpecialCharTok{{-}}\FloatTok{0.50569185} \SpecialCharTok{{-}}\FloatTok{0.82082351}  \FloatTok{0.00000000}  \FloatTok{0.00000000}
+\NormalTok{[}\DecValTok{19}\NormalTok{]  }\FloatTok{0.00000000}  \FloatTok{1.27995052} \SpecialCharTok{{-}}\FloatTok{0.99367984}
+\end{Highlighting}
+\end{Shaded}
+
+To solve this question, we need to manipulate the strings (a.k.a., the
+characters) to extract the selected variables and their index number.
+Here, I use the package \texttt{stringr}.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \CommentTok{\# install.packages("stringr")}
+\ErrorTok{\textgreater{}} \FunctionTok{library}\NormalTok{(stringr)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ beta\_errors }\OtherTok{\textless{}{-}} \FunctionTok{c}\NormalTok{()}
+\SpecialCharTok{\textgreater{}} \ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{1}\SpecialCharTok{:}\DecValTok{20}\NormalTok{) \{}
+\SpecialCharTok{+}   \CommentTok{\# to extract the best coefficient and corresponding variables}
+\SpecialCharTok{+}\NormalTok{   coef\_temp }\OtherTok{\textless{}{-}}\NormalTok{ (}\FunctionTok{coef}\NormalTok{(bss\_out,}\AttributeTok{id=}\NormalTok{i))}
+\SpecialCharTok{+}   \CommentTok{\# to construct a dataframe for processing convenience}
+\SpecialCharTok{+}\NormalTok{   coef\_temp\_df }\OtherTok{\textless{}{-}} \FunctionTok{as.data.frame}\NormalTok{(}\FunctionTok{t}\NormalTok{(}\FunctionTok{as.matrix}\NormalTok{(coef\_temp)))}
+\SpecialCharTok{+}   \CommentTok{\# make a null matrix(vector) with the size of 1*21}
+\SpecialCharTok{+}\NormalTok{   coef\_temp\_vec }\OtherTok{\textless{}{-}} \FunctionTok{as.vector}\NormalTok{(}\FunctionTok{rep}\NormalTok{(}\DecValTok{0}\NormalTok{,}\DecValTok{21}\NormalTok{))}
+\SpecialCharTok{+}   \CommentTok{\# mapping all model{-}selected variables\textquotesingle{}s names}
+\SpecialCharTok{+}   \ControlFlowTok{for}\NormalTok{(name }\ControlFlowTok{in} \FunctionTok{names}\NormalTok{(coef\_temp\_df[}\SpecialCharTok{{-}}\DecValTok{1}\NormalTok{])) \{}
+\SpecialCharTok{+}     \CommentTok{\# extract the location information}
+\SpecialCharTok{+}\NormalTok{     var\_location }\OtherTok{\textless{}{-}} \FunctionTok{as.numeric}\NormalTok{(}\FunctionTok{str\_sub}\NormalTok{(name, }\AttributeTok{start =} \DecValTok{2}\NormalTok{))}
+\SpecialCharTok{+}     \CommentTok{\# write the coefficient to corresponding location}
+\SpecialCharTok{+}\NormalTok{     coef\_temp\_vec[var\_location}\SpecialCharTok{+}\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ coef\_temp\_df[}\DecValTok{1}\NormalTok{,name]}
+\SpecialCharTok{+}\NormalTok{   \}}
+\SpecialCharTok{+}\NormalTok{   coef\_temp\_vec[}\DecValTok{1}\NormalTok{] }\OtherTok{\textless{}{-}}\NormalTok{ coef\_temp[}\DecValTok{1}\NormalTok{]}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}   \CommentTok{\# to subtract the original coefficient vector and the estimated vector}
+\SpecialCharTok{+}\NormalTok{   beta\_error }\OtherTok{\textless{}{-}} \FunctionTok{as.vector}\NormalTok{(coef1)}\SpecialCharTok{{-}}\NormalTok{ coef\_temp\_vec}
+\SpecialCharTok{+}\NormalTok{   out\_ }\OtherTok{\textless{}{-}} \FunctionTok{sqrt}\NormalTok{(}\FunctionTok{t}\NormalTok{(beta\_error) }\SpecialCharTok{\%*\%}\NormalTok{ beta\_error)}
+\SpecialCharTok{+}   
+\SpecialCharTok{+}   \CommentTok{\# write the outcome into the beta\_errors set}
+\SpecialCharTok{+}\NormalTok{   beta\_errors[i] }\OtherTok{\textless{}{-}}\NormalTok{ out\_}
+\SpecialCharTok{+}\NormalTok{ \}}
+\SpecialCharTok{\textgreater{}} 
+\ErrorTok{\textgreater{}} \FunctionTok{round}\NormalTok{(beta\_errors,}\DecValTok{3}\NormalTok{)}
+\NormalTok{ [}\DecValTok{1}\NormalTok{] }\FloatTok{66.353} \FloatTok{22.873} \FloatTok{20.167}  \FloatTok{3.107}  \FloatTok{8.206}  \FloatTok{5.759}  \FloatTok{1.201}  \FloatTok{7.390}  \FloatTok{2.575}  \FloatTok{8.969}
+\NormalTok{[}\DecValTok{11}\NormalTok{] }\FloatTok{11.422} \FloatTok{14.863} \FloatTok{16.576} \FloatTok{17.628} \FloatTok{18.318} \FloatTok{17.880} \FloatTok{16.917} \FloatTok{17.554} \FloatTok{16.858} \FloatTok{17.143}
+\end{Highlighting}
+\end{Shaded}
+
+The results looks good. Next, I plot the beta errors.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\SpecialCharTok{\textgreater{}} \FunctionTok{plot}\NormalTok{(beta\_errors,}
+\SpecialCharTok{+}      \AttributeTok{xlab =} \StringTok{"Number of Vairables"}\NormalTok{,}
+\SpecialCharTok{+}      \AttributeTok{ylab =} \StringTok{"Beta Errors"}\NormalTok{,}
+\SpecialCharTok{+}      \AttributeTok{type =} \StringTok{"l"}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{title}\NormalTok{(}\AttributeTok{main =} \StringTok{"Figure 3. Beta errors for each size."}\NormalTok{, }
+\SpecialCharTok{+}       \AttributeTok{cex.main =} \DecValTok{1}\NormalTok{)}
+\SpecialCharTok{\textgreater{}}\NormalTok{ min\_index }\OtherTok{\textless{}{-}} \FunctionTok{which.min}\NormalTok{(beta\_errors)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{points}\NormalTok{(min\_index,beta\_errors[min\_index],}\AttributeTok{col=}\StringTok{"red"}\NormalTok{,}\AttributeTok{cex=}\DecValTok{2}\NormalTok{, }\AttributeTok{pch=}\DecValTok{20}\NormalTok{)}
+\SpecialCharTok{\textgreater{}} \FunctionTok{abline}\NormalTok{(}\AttributeTok{h=}\FunctionTok{min}\NormalTok{(beta\_errors), }\AttributeTok{col=}\StringTok{"red"}\NormalTok{,}\AttributeTok{lty=}\StringTok{"longdash"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics[width=0.5\linewidth,height=0.5\textheight]{Homework_10_Pan_files/figure-latex/unnamed-chunk-11-1}
+
+From the plot we can see that this method selected the 7-predictors
+models as the best. However, we do not really know what is the
+performance on the testing dataset. We should not rely on this method to
+select the best model.
 
 \end{document}

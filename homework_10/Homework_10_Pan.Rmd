@@ -1,6 +1,6 @@
 ---
 title: "HUDM6026 Homework_10"
-author: Chenguang Pan
+author: Chenguang Pan & Seng Lei
 date: April 04, 2023
 output:
   pdf_document:
@@ -154,7 +154,88 @@ abline(h=min(test_mse), col="red",lty="longdash")
 ### (e)  
 *For which model size does the test set MSE take on its minimum value? Comment on your results.*  
 
+**MY SOLUTION:**    
+*Figure 2* shows that the model with 10 predictors has the lowest test MSE. From the results below, the ten covariates are $X1$,$X4$,$X7$,$X9$,$X10$,$X13$,$X14$,$X15$,$X19$, and $X20$.
+```{r}
+bss_out_summary$outmat[10,]
+```  
+
+### (f)  
+*How does the model at which the test set MSE is minimized compare to the true model used to generate the data? *  
+
 **MY SOLUTION:**  
+```{r}
+# extract the estimated 10-predictor model's coefficient
+round(coef(bss_out,id=10),3)
+# extract the original 10-predictor model's coefficient
+original_coef <- as.data.frame(matrix(round(coef1[which(coef1 !=0)],3),
+                                      1,11,byrow=T))
+names(original_coef) <- c("Intercept","X1","X4","X7","X9","X10","X13","X14","X15","X19", "X20")
+original_coef
+```  
+Comparing the estimated coefficients and the original coefficients, we can see that:  
+- first, the number of the coefficient are the same;  
+- second, the value of each estimated coefficient is very close to the original one;  
+
+
+### (g)  
+*Create a plot displaying ... for a range of values of r, where . is the jth coeffcicient for the best model containing r coeeficients.Comment on what you observe. How does this compare to the test MSE plot from (d) *  
+
+**MY SOLUTION:**  
+```{r}
+coef1
+```  
+To solve this question, we need to manipulate the strings (a.k.a., the characters) to extract the selected variables and their index number. Here, I use the package `stringr`.
+```{r}
+# install.packages("stringr")
+library(stringr)
+beta_errors <- c()
+for (i in 1:20) {
+  # to extract the best coefficient and corresponding variables
+  coef_temp <- (coef(bss_out,id=i))
+  # to construct a dataframe for processing convenience
+  coef_temp_df <- as.data.frame(t(as.matrix(coef_temp)))
+  # make a null matrix(vector) with the size of 1*21
+  coef_temp_vec <- as.vector(rep(0,21))
+  # mapping all model-selected variables's names
+  for(name in names(coef_temp_df[-1])) {
+    # extract the location information
+    var_location <- as.numeric(str_sub(name, start = 2))
+    # write the coefficient to corresponding location
+    coef_temp_vec[var_location+1] <- coef_temp_df[1,name]
+  }
+  coef_temp_vec[1] <- coef_temp[1]
+  
+  # to subtract the original coefficient vector and the estimated vector
+  beta_error <- as.vector(coef1)- coef_temp_vec
+  out_ <- sqrt(t(beta_error) %*% beta_error)
+  
+  # write the outcome into the beta_errors set
+  beta_errors[i] <- out_
+}
+
+round(beta_errors,3)
+```  
+The results looks good. Next, I plot the beta errors.  
+```{r,fig.show='hold',out.width="50%",out.height= "50%"}
+plot(beta_errors,
+     xlab = "Number of Vairables",
+     ylab = "Beta Errors",
+     type = "l")
+title(main = "Figure 3. Beta errors for each size.", 
+      cex.main = 1)
+min_index <- which.min(beta_errors)
+points(min_index,beta_errors[min_index],col="red",cex=2, pch=20)
+abline(h=min(beta_errors), col="red",lty="longdash")
+```   
+
+From the plot we can see that this method selected the 7-predictors models as the best. However, we do not really know what is the performance on the testing dataset. We should not rely on this method to select the best model.
+
+
+
+
+
+
 
 
 
