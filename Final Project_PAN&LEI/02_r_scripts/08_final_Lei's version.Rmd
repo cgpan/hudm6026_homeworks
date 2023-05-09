@@ -1,0 +1,298 @@
+---
+title: "Final project"
+author: "P and L"
+date: '2023-05-07'
+output: html_document
+---
+
+## 1.0 Introduction  
+
+High School Longitudinal Study of 2009(HSLS:09) is a nationally representative, longitudinal study of 23,000+ ninth graders from 944 schools in 2009. It provides comprehensive information about student's background, academic performance in both high school and college, personal attitudes towards study and school, etc. Therefore, this current project uses the HSLS:09 open dataset.    
+
+This study analyzed a large dataset consisting of 23,503 observations and 9,614 variables to investigate the potential relationship between ninth-grade mathematics foundation and future achievement in STEM fields. To accomplish this objective, a simple linear regression model was employed, which allowed for the estimation of the effect of math proficiency on overall GPA in STEM courses throughout high school. The standardized mathematics assessment of algebraic reasoning, administered during the first semester of grade 9, was utilized to measure students' mathematical abilities at the onset of high school. In turn, the overall GPA in STEM courses was used as a metric of academic performance in STEM subjects throughout the high school years.
+  
+  
+After some data cleaning, we kept 199,948 observations for analysis. The simple linear model is: $$y_i = \beta_0 + \beta_1\times x_i + e_i ,$$ where $y_i$ is the estimated individual outcome for overall STEM GPA, $x_i$ is the student's mathematics assessment score, and $e_i$ is the measurement error.
+
+## 2.0 Population data descriptions
+
+```{r, echo=FALSE,results="hide"}
+load("~/Desktop/PhD_Learning/HUDM6026 Computational Statistics/HUDM6026_Final_Project/01_data/02_processed_data/hsls_sub.rdata")
+(n = dim(hsls_sub)[1])
+(mu_stem = mean(hsls_sub$X3TGPASTEM))
+(mu_scor = mean(hsls_sub$X1TXMTSCOR))
+(sd_stem = sd(hsls_sub$X3TGPASTEM))
+(sd_scor = sd(hsls_sub$X1TXMTSCOR))
+table(hsls_sub$X3TGPASTEM)
+cor(hsls_sub$X3TGPASTEM,hsls_sub$X1TXMTSCOR)
+# plot(hsls_sub$X3TGPASTEM,hsls_sub$X1TXMTSCOR)
+# plot(hsls_sub$X1TXMTSCOR,hsls_sub$X3TGPASTEM)
+```  
+As a simulated study, we treated cleaned dataset as the population, *N*=`r n`. The mean and standard deviation for the dependent variable are 2.440 and .934. And 51.250 and 10.031 for the predictor. The correlation coefficient between these two variables is .567.  
+
+```{r}
+model_lm <- lm(X3TGPASTEM ~ X1TXMTSCOR, data = hsls_sub)
+summary(model_lm)
+```  
+
+The simple linear regression model presented that the overall model can explain the 32.15% of the variance in outcome, $F(1,19946)=9452$, $p < .001$. One score increase in 9th grader's math assessment will be associated with .053 increase in overall STEM GPA and this relation is statistically significant, $\beta_1=.053$, $p <.001$. The expected value of overall STEM GPA (i.e., $\beta_0$) when student gets zero in math assessment is $-.265$, $p <.001$. The negative GPA does not make any sense, but we ignored this issue and move on the study.  
+
+
+## 3.0 Writing R functions  
+  
+  
+```{r}
+dat_gen <- function(size= 500,  # smaple size
+                    betas,      # a numeric array of betas
+                    iv_mean,    # predictor's mean
+                    iv_var,     # predictor's variance
+                    error_sd){  # residuals' sd
+  # data mainly are generated from a normal distribution ~ N(iv_mean, iv_sd)
+  X <- rnorm(size, mean = iv_mean, sd= sqrt(iv_var))
+  X_aug <- cbind(1, X)
+  # residuals are generated from ~N(0, sd)
+  Error <- rnorm(size, mean=0, sd=error_sd)
+  # based on the parameters to generate the outcomes
+  Y <- X_aug %*% as.matrix(betas) + Error
+  out <- cbind(Y, X)
+  colnames(out) <- c("Y", "X1")
+  return(as.data.frame(out))
+}
+```   
+The data generation function takes the sample size, regression coefficients, predictors' mean and variance, and the standard deviation of residual as input. It returns a simulated dataset in `dataframe` format with the outcome in the first column and predictor in the second. 
+
+
+```{r}
+reg <- function(ds) {
+  x <- as.matrix(ds[,2])
+  y <- as.matrix(ds[,1])
+  y_cen <- apply(y, 2, function(y) y-mean(y))
+  x_cen <- apply(x, 2, function(x) x-mean(x))
+  # the OLS method
+  b1 <- sum(x_cen*y_cen)/sum(x_cen^2)
+  b0 <- mean(y - x*b1)
+  y_hat <- b0 + x*b1
+  sse <- sum((y-y_hat)^2)
+  sig_sq <- sse/(nrow(x)-2)
+  # the alternative method
+  b1_a <- sum(y_cen/x_cen)/nrow(x)
+  b0_a <- mean(y - x*b1_a)
+  y_hat_a <- b0_a + x*b1_a
+  sse_a <- sum((y-y_hat_a)^2)
+  sig_sq_a <- sse_a/nrow(x)
+  out_ <- cbind(b0, b1, sig_sq, b0_a, b1_a,sig_sq_a)
+  return(out_)
+}
+```  
+
+
+
+
+```{r}
+reg <- function(ds) {
+  x <- as.matrix(ds[,2])
+  y <- as.matrix(ds[,1])
+  y_cen <- apply(y, 2, function(y) y-mean(y))
+  x_cen <- apply(x, 2, function(x) x-mean(x))
+  # the OLS method
+  b1 <- sum(x_cen*y_cen)/sum(x_cen^2)
+  b0 <- mean(y - x*b1)
+  y_hat <- b0 + x*b1
+  sse <- sum((y-y_hat)^2)
+  sig_sq <- sse/(nrow(x)-2)
+  # the alternative method
+  b1_a <- sum(y_cen/x_cen)/nrow(x)
+  b0_a <- mean(y - x*b1_a)
+  y_hat_a <- b0_a + x*b1_a
+  sse_a <- sum((y-y_hat_a)^2)
+  sig_sq_a <- sse_a/nrow(x)
+  out_ <- cbind(b0, b1, sig_sq, b0_a, b1_a,sig_sq_a)
+  return(out_)
+}
+``` 
+
+
+
+The estimation function takes the simulated data frame as input, and returns the estimated $\beta_0$,  $\beta_1$, residual's variance $\sigma^2$ from both least square and alternative methods.  
+
+## 4.0 Monte Carlo Simulation  
+
+The basic idea behind the Monte Carlo simulation is that one can draw a large number of random samples from a probability distribution representing the population being studied, and then these samples are used to estimate its statistical properties. This project used Monte Carlo method to draw 1000 random samples with the size of 40 by using the `dat_gen()` function above. 
+```{r}
+R <- 1000
+set.seed(666)
+# randomly generate 1000 samples
+dat_list <- replicate(n = R,
+                      expr = dat_gen(size = 40,
+                                     betas = c(-0.265,0.053),
+                                     iv_mean = 51.24985, iv_var = 100.6209,
+                                     error_sd = 0.7693),
+                      simplify = FALSE)
+# estimated the simple regression model on each sample
+estimates <- sapply(X = dat_list,
+                    FUN = reg,
+                    simplify = TRUE)
+estimates <- t(estimates)
+colnames(estimates) <- c("b0", "b1", "sig_sq", "b0_a", "b1_a", "sig_sq_a")
+# write a function to calculate the estimates
+est_out <- function(esti_mat, size){
+  # to calculate the MSE
+  # first to make a parameter matrix in shape of the estimates matrix
+  theta_m <- matrix(c(-0.265, 0.053,0.7693), nrow(esti_mat),6 , byrow = T)
+  # use the estimates matrix minus the parameter matrix
+  est_cent <-esti_mat-theta_m
+  # use apply to get the mse for each estimates
+  estimates_hat_mean <- round(apply(esti_mat,2,mean),3)
+  estimates_hat_var <- round(apply(esti_mat,2,var),3)
+  estimates_hat_se <- round(apply(esti_mat,2,function(x) sd(x)/sqrt(size)),3)
+  estimates_mse <- round(apply(est_cent,2,function(x) sum(x^2)/size),3)
+  results <- rbind(estimates_hat_mean,estimates_hat_var,
+                   estimates_hat_se,estimates_mse)
+  rownames(results) <- c("Mean", "Variance","SE", "MSE")
+  results_trans <- as.data.frame(t(results))
+  # add a column to calculate the bias
+  par_m <- matrix(c(-0.265, 0.053,0.7693), 6,1)
+  results_trans$Bias <- results_trans$Mean - par_m
+  results_trans$Parameter <- par_m
+  results_trans <- results_trans[,c(6,1,3,2,5,4)]
+  return(results_trans)
+}
+(mc_out <- est_out(estimates, R))
+```  
+
+## 5.0 Bootstrap method  
+
+The bootstrap method is a statistical technique that involves the repeated sampling with replacement from the original data to obtain estimates of variability and uncertainty of a statistic of interest. Specifically, the statistic is computed on each of the resamples, and the resulting distribution is used to calculate confidence intervals or conduct hypothesis tests. Since we have a single sample of 40 observations in this context, the bootstrap method is proposed to be applied to the row indices of the original dataset. Each resample would be created based on the shuffled indices of the original data, thus allowing for the generation of multiple estimates of the statistic of interest.  
+
+The R function for bootstrap is as follows.  
+```{r}
+# generate a single dataset
+data_b <-dat_gen(size = 40,betas = c(-0.265,0.053),
+                iv_mean = 51.24985, iv_var = 100.6209,
+                error_sd = 0.7693)
+# run bootstrapping on this single dataset
+B = 1000
+# shuffle the 1:40 index rather than data_b
+boot_index <- replicate(n=B,
+                       expr = sample(1:40, 40, TRUE),
+                       simplify = FALSE)
+# use the bootstrapped indices to extracted the data
+boot_samp <- list()
+for (i in 1:1000) {
+  boot_unit <- data_b[boot_index[[i]],]
+  boot_samp[[i]] <- boot_unit
+}
+estimates <- sapply(X = boot_samp,
+                    FUN = reg,
+                    simplify = TRUE)
+estimates <- t(estimates)
+colnames(estimates) <- c("b0", "b1", "sig_sq", "b0_a", "b1_a", "sig_sq_a")
+(bs_out<-est_out(estimates, B))
+```  
+
+## 6.0 Jackknife method  
+
+The jackknife method is a statistical technique to estimate the bias and variance of a statistic by systematically leaving out one observation at a time from the dataset, creating a series of "jackknife samples". By recalculating the statistic of interest on each of these samples, we can obtain an approximation of the distribution of the statistic, and use it to estimate its bias and standard error. In the present context, we applied the jackknife method to the same 40-observation dataset.  
+
+```{r}
+jack_list <- list()
+for (i in 1:40) {
+  # each round drop the ith observation
+  data_loov <- data_b[-i,]
+  # make a list to load each jacknife sample
+  jack_list[[i]] <- data_loov
+}
+estimates <- sapply(X = jack_list,
+                    FUN = reg,
+                    simplify = TRUE)
+estimates <- t(estimates) 
+# this is a 40 x 6 matrix
+colnames(estimates) <- c("b0", "b1", "sig_sq", "b0_a", "b1_a", "sig_sq_a")
+# since the population parameter is known, we use them directly
+(jn_out<-est_out(estimates, 40))
+```  
+One should notice that the population information is available in this simulated study. Therefore, we chose to not use the plug-in principle to estimate the bias or MSE.   
+
+```{r, echo=FALSE,eval=FALSE}
+# this part won't display in the final rmd pdf, but it still runs to output the table
+# if you wanna run these code, please set the eval=TRUE in this chunk setting
+final_result <- rbind(mc_out, bs_out, jn_out)
+write.csv(final_result, "~/Desktop/PhD_Learning/HUDM6026 Computational Statistics/HUDM6026_Final_Project/03_outputs/02_final_results.csv")
+```  
+
+
+
+
+4. Can you say anything about the theoretically based bias, variance, or MSE of any of these estimators? 
+If so, what and how do you know?
+
+OLS
+$$
+\hat\beta_1 = \frac{S_{xy}}{S_x^2} 
+$$
+Which can write into:
+
+$$
+
+\hat\beta_1 = \frac{\sum_{i=1}^{n}(x_i-\bar{x})(y_i-\bar{y})}{\sum_{i=1}^{n}(x_i-\bar{x})^2} = \sum_{i=1}^{n}\frac{(x_i-\bar{x})^2}{\sum_{i=1}^{n}(x_i-\bar{x})^2}\frac{(y_i-\bar{y})}{(x_i-\bar{x})} 
+
+
+$$
+
+Since this term is the slope of the line between point i to the center point of the data
+$$
+\frac{(y_i-\bar{y})}{(x_i-\bar{x})}
+
+$$
+We can conclude Beta1 is a weighted average of slope of the line that connects the i-th point to the average of all points, the weight is determined by the distance of x to mean of x. The longer distance would be weighted more since small changes in its position will affect the slope connecting it to the center point more than closer points. We expect estimated Beta1 in OLS would be close to true Beta.
+
+$$
+\hat\sigma^2 = \frac{SSE}{n-2}
+$$
+This is an unbiased estimate of the population sigma^2
+So when we generate a large number of samples and the average should be close to the true sigma^2
+
+Alternative
+$$
+\beta_1^a = \frac{1}{n}\sum_{i=1}^{n}\frac{(y_i-\bar{y})}{(x_i-\bar{x})}
+
+$$
+
+Beta1 is the average slope for all the points in the sample, each point is equally weighted compared to OLS. This estimator would be less sensitive to the points far to the center. So it can not capture the change in y efficiently when the point is far from the center. Then the estimated Beta1 in the alternative method would be less close to true Beta.
+
+$$
+\sigma^2_a = \frac{SSE}{n}
+$$
+
+The alternative estimator for sample variance is a biased estimator which will underestimate the true sigma^2. But since the SSE was based on Alternative Beta1, it would depend on the estimated value of y heavily. And since the Alternative estimator for Beta1 would be less accurate, the sample variance would be larger than expected.
+
+
+5. How do results from the Monte Carlo, bootstrap, and jackknife procedures compare 
+with theory and with each other?
+
+From the result table and compared to the theory, it basically matches our guessing. Using the OLS approach, the beta1 estimation was very close to the true beta, with 0 standard error and variance. Which means in every sample we generated, the estimator of beta1 is the same.  The result in Bootstrap and Jackknife is slightly different from true beta which can be due to the replacement of the points in each sample in bootstrap and leaving-one-out for Jackknife.
+
+As for the Alternative approach, we could find these estimated beta1 are not even close to the true beta, which leads to a huge variance in alternative estimator for variance.
+
+6.Comment on which of the three computational procedures is the most accurate in estimating bias, variance, and MSE of these estimators and explain why you believe so.
+
+Monte Claro seems to have a better bias, variance and SEM since it was generating data from the sample distribution, while jackknife and bootstrap are using the real observed data. 
+
+7. Conclude with some discussion about the pros and cons of Monte Carlo vs bootstrap vs jackknife for learning about the properties of estimators.
+
+Jackknife's pros is more friendly to computational power, but the cons it might be less accurate than Monte Carlo and bootstrap since it can only provide n samples for studying. So when sample size is small this is not a good resampling method.  
+
+Bootstrap provides sample distributions with replacement, the pros is it provide a good estimates of uncertainty. 
+The cons is if we did not generate a big enough number of samples,the information from one point might be more heavy than other points in the estimation. So the bootstrap is sensitive to number of samples we generate. Another problem is if the real sample does not represent the population, we can not obtain any useful estimation towards the population, since bootstrap only repeat the observation in the sample. Finally, bootstrap is computational intensive.
+ 
+Monte Claro can be useful when we have a correct belief about the population distribution. It is a good way to estimate uncertainty. The cons is very sensitive to the input of generating process and cost much computational power.
+
+
+
+
+
+
+
+
+
+
